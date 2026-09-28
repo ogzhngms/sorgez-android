@@ -50,6 +50,12 @@
     <string name="confirm_title">プランを作成しますか？</string>
     <string name="label_destination">行き先</string>
     <string name="label_days">期間</string>
+    <string name="when_title">いつ行きますか？</string>
+    <string name="when_unknown">まだ未定</string>
+    <string name="label_when">時期</string>
+    <string name="days_weekend">週末</string>
+    <string name="days_week">1週間</string>
+    <string name="days_two_weeks">2週間</string>
     <string name="label_companions">同行者</string>
     <string name="label_budget">予算</string>
     <string name="label_interests">興味</string>

@@ -50,6 +50,12 @@
     <string name="confirm_title">Siap membuat rencana?</string>
     <string name="label_destination">Tujuan</string>
     <string name="label_days">Durasi</string>
+    <string name="when_title">Kapan kamu pergi?</string>
+    <string name="when_unknown">Belum pasti</string>
+    <string name="label_when">Kapan</string>
+    <string name="days_weekend">Akhir pekan</string>
+    <string name="days_week">1 minggu</string>
+    <string name="days_two_weeks">2 minggu</string>
     <string name="label_companions">Dengan</string>
     <string name="label_budget">Anggaran</string>
     <string name="label_interests">Minat</string>

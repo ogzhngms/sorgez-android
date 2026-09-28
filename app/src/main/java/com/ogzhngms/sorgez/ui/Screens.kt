@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,6 +40,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -64,6 +66,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalView
@@ -98,6 +101,9 @@ import com.ogzhngms.sorgez.TripViewModel
 import com.ogzhngms.sorgez.findPlace
 import com.ogzhngms.sorgez.normalize
 import com.ogzhngms.sorgez.suggestPlaces
+import java.time.LocalDate
+import java.time.Month
+import java.time.format.TextStyle
 import java.util.Locale
 import org.json.JSONObject
 
@@ -177,7 +183,12 @@ private fun QuestionScreen(
             DestinationStep(answers.destination, { value -> onUpdate { it.copy(destination = value) } }, onNext, Modifier.weight(1f))
         } else Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
             when (step) {
-                1 -> DayPicker(answers.days) { days -> onUpdate { it.copy(days = days) } }
+                1 -> DaysStep(
+                    answers.days,
+                    answers.month,
+                    onDays = { days -> onUpdate { it.copy(days = days) } },
+                    onMonth = { month -> onUpdate { it.copy(month = month) } },
+                )
                 2 -> IconChoices(Companions.entries, { it == answers.companions }, { it.label }, { it.icon }) { choice ->
                     onUpdate { it.copy(companions = choice) }
                 }
@@ -209,22 +220,111 @@ private fun QuestionScreen(
     }
 }
 
+// The length large between − and +, tiles for the usual lengths, then the month of travel.
+@Composable
+private fun DaysStep(days: Int, month: Int?, onDays: (Int) -> Unit, onMonth: (Int?) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+        DayPicker(days, onDays)
+        DayTiles(days, onDays)
+        Spacer(Modifier.height(4.dp))
+        Text(stringResource(R.string.when_title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+        MonthPicker(month, onMonth)
+    }
+}
+
 @Composable
 private fun DayPicker(days: Int, onChange: (Int) -> Unit) {
     val fewer = stringResource(R.string.cd_fewer_days)
     val more = stringResource(R.string.cd_more_days)
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(24.dp)) {
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
         FilledTonalButton(
             onClick = { onChange(days - 1) },
             enabled = days > 1,
             modifier = Modifier.semantics { contentDescription = fewer },
         ) { Text("−", style = MaterialTheme.typography.titleLarge) }
-        Text(pluralStringResource(R.plurals.days, days, days), style = MaterialTheme.typography.headlineSmall)
+        Text(
+            pluralStringResource(R.plurals.days, days, days),
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Bold,
+        )
         FilledTonalButton(
             onClick = { onChange(days + 1) },
             enabled = days < MAX_DAYS,
             modifier = Modifier.semantics { contentDescription = more },
         ) { Text("+", style = MaterialTheme.typography.titleLarge) }
+    }
+}
+
+// A length and, for the ones people name, that name: "Weekend" over "2 days".
+private class Length(val days: Int, @StringRes val name: Int?)
+
+private val LENGTHS = listOf(
+    Length(2, R.string.days_weekend),
+    Length(3, null),
+    Length(5, null),
+    Length(7, R.string.days_week),
+    Length(10, null),
+    Length(14, R.string.days_two_weeks),
+)
+
+@Composable
+private fun DayTiles(days: Int, onPick: (Int) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        LENGTHS.chunked(3).forEach { row ->
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                row.forEach { length ->
+                    val count = pluralStringResource(R.plurals.days, length.days, length.days)
+                    SelectTile(length.days == days, { onPick(length.days) }, Modifier.weight(1f).height(64.dp)) { color ->
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(length.name?.let { stringResource(it) } ?: count, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = color)
+                            if (length.name != null) {
+                                Text(count, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// "Not sure yet", then the next twelve months starting with this one, in the app's language.
+@Composable
+private fun MonthPicker(month: Int?, onPick: (Int?) -> Unit) {
+    val locale = Locale.getDefault()
+    val thisMonth = remember { LocalDate.now().monthValue }
+    val options = listOf<Int?>(null) + List(12) { (thisMonth - 1 + it) % 12 + 1 }
+    Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        options.forEach { option ->
+            SelectTile(option == month, { onPick(option) }, Modifier.height(44.dp)) { color ->
+                Text(
+                    option?.let { monthName(it, locale) } ?: stringResource(R.string.when_unknown),
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Medium,
+                    color = color,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+            }
+        }
+    }
+}
+
+internal fun monthName(month: Int, locale: Locale): String =
+    Month.of(month).getDisplayName(TextStyle.FULL_STANDALONE, locale).replaceFirstChar { it.titlecase(locale) }
+
+// An outlined tile, green-tinted when chosen, like the icon tiles; the content gets the text colour to use.
+@Composable
+private fun SelectTile(chosen: Boolean, onClick: () -> Unit, modifier: Modifier, content: @Composable (Color) -> Unit) {
+    val colors = MaterialTheme.colorScheme
+    OutlinedCard(
+        onClick = onClick,
+        modifier = modifier.semantics { selected = chosen },
+        colors = CardDefaults.outlinedCardColors(containerColor = if (chosen) colors.primary.copy(alpha = 0.14f) else colors.surface),
+        border = BorderStroke(if (chosen) 2.dp else 1.dp, if (chosen) colors.primary else colors.outlineVariant),
+    ) {
+        Box(Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
+            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) { content(if (chosen) colors.primary else colors.onSurface) }
+        }
     }
 }
 
@@ -338,6 +438,7 @@ private fun ConfirmScreen(answers: TripAnswers, onPlan: () -> Unit, onEdit: () -
                 Column(Modifier.padding(vertical = 6.dp)) {
                     Summary(R.string.label_destination, answers.destination.trim()) { onEditStep(0) }
                     Summary(R.string.label_days, pluralStringResource(R.plurals.days, answers.days, answers.days)) { onEditStep(1) }
+                    answers.month?.let { Summary(R.string.label_when, monthName(it, Locale.getDefault())) { onEditStep(1) } }
                     Summary(R.string.label_companions, stringResource(answers.companions.label)) { onEditStep(2) }
                     Summary(R.string.label_budget, stringResource(answers.budget.label)) { onEditStep(3) }
                     Summary(

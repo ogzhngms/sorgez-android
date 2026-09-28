@@ -50,6 +50,12 @@
     <string name="confirm_title">准备好规划了吗？</string>
     <string name="label_destination">目的地</string>
     <string name="label_days">时长</string>
+    <string name="when_title">你什么时候去？</string>
+    <string name="when_unknown">还没确定</string>
+    <string name="label_when">时间</string>
+    <string name="days_weekend">周末</string>
+    <string name="days_week">1 周</string>
+    <string name="days_two_weeks">2 周</string>
     <string name="label_companions">同行</string>
     <string name="label_budget">预算</string>
     <string name="label_interests">兴趣</string>

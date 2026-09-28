@@ -38,5 +38,12 @@ class PromptTest {
         assertTrue("Interests: no preference" in prompt)
         assertTrue("Currency: TRY" in prompt)
         assertFalse("Other wishes" in prompt)
+        assertFalse("Month:" in prompt)
+    }
+
+    @Test
+    fun theMonthAsksForASeasonalPlan() {
+        val prompt = buildPrompt(TripAnswers(destination = "Rome", month = 8), "English")
+        assertTrue("Month: August, so suit the plan to that season and its weather" in prompt)
     }
 }

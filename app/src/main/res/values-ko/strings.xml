@@ -50,6 +50,12 @@
     <string name="confirm_title">계획을 만들까요?</string>
     <string name="label_destination">목적지</string>
     <string name="label_days">기간</string>
+    <string name="when_title">언제 가나요?</string>
+    <string name="when_unknown">아직 모르겠어요</string>
+    <string name="label_when">시기</string>
+    <string name="days_weekend">주말</string>
+    <string name="days_week">1주</string>
+    <string name="days_two_weeks">2주</string>
     <string name="label_companions">동행</string>
     <string name="label_budget">예산</string>
     <string name="label_interests">관심사</string>

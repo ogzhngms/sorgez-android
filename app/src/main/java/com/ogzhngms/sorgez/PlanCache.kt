@@ -26,6 +26,7 @@ class PlanCache(private val folder: File) {
 fun planKey(answers: TripAnswers, language: String, currency: Currency): String = listOf(
     normalize(answers.destination),
     answers.days,
+    answers.month,
     answers.companions,
     answers.budget,
     answers.interests.sorted().joinToString(","),

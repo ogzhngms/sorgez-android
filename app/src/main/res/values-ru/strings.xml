@@ -53,6 +53,12 @@
     <string name="confirm_title">Готов планировать?</string>
     <string name="label_destination">Куда</string>
     <string name="label_days">Длительность</string>
+    <string name="when_title">Когда едешь?</string>
+    <string name="when_unknown">Пока не знаю</string>
+    <string name="label_when">Когда</string>
+    <string name="days_weekend">Выходные</string>
+    <string name="days_week">1 неделя</string>
+    <string name="days_two_weeks">2 недели</string>
     <string name="label_companions">С кем</string>
     <string name="label_budget">Бюджет</string>
     <string name="label_interests">Интересы</string>

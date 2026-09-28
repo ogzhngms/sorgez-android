@@ -51,6 +51,12 @@
     <string name="confirm_title">योजना बनाने के लिए तैयार?</string>
     <string name="label_destination">गंतव्य</string>
     <string name="label_days">अवधि</string>
+    <string name="when_title">आप कब जा रहे हैं?</string>
+    <string name="when_unknown">अभी तय नहीं</string>
+    <string name="label_when">कब</string>
+    <string name="days_weekend">वीकेंड</string>
+    <string name="days_week">1 हफ़्ता</string>
+    <string name="days_two_weeks">2 हफ़्ते</string>
     <string name="label_companions">साथ में</string>
     <string name="label_budget">बजट</string>
     <string name="label_interests">रुचियाँ</string>

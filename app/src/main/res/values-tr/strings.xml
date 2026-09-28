@@ -51,6 +51,12 @@
     <string name="confirm_title">Plan hazırlansın mı?</string>
     <string name="label_destination">Nereye</string>
     <string name="label_days">Süre</string>
+    <string name="when_title">Ne zaman gidiyorsun?</string>
+    <string name="when_unknown">Henüz belli değil</string>
+    <string name="label_when">Ne zaman</string>
+    <string name="days_weekend">Hafta sonu</string>
+    <string name="days_week">1 hafta</string>
+    <string name="days_two_weeks">2 hafta</string>
     <string name="label_companions">Kiminle</string>
     <string name="label_budget">Bütçe</string>
     <string name="label_interests">İlgi alanları</string>

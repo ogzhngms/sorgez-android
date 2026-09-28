@@ -53,6 +53,12 @@
     <string name="confirm_title">Ready to plan?</string>
     <string name="label_destination">Destination</string>
     <string name="label_days">Length</string>
+    <string name="when_title">When are you going?</string>
+    <string name="when_unknown">Not sure yet</string>
+    <string name="label_when">When</string>
+    <string name="days_weekend">Weekend</string>
+    <string name="days_week">1 week</string>
+    <string name="days_two_weeks">2 weeks</string>
     <string name="label_companions">With</string>
     <string name="label_budget">Budget</string>
     <string name="label_interests">Interests</string>

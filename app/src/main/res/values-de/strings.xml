@@ -51,6 +51,12 @@
     <string name="confirm_title">Bereit zum Planen?</string>
     <string name="label_destination">Ziel</string>
     <string name="label_days">Dauer</string>
+    <string name="when_title">Wann fährst du?</string>
+    <string name="when_unknown">Noch unklar</string>
+    <string name="label_when">Wann</string>
+    <string name="days_weekend">Wochenende</string>
+    <string name="days_week">1 Woche</string>
+    <string name="days_two_weeks">2 Wochen</string>
     <string name="label_companions">Mit</string>
     <string name="label_budget">Budget</string>
     <string name="label_interests">Interessen</string>

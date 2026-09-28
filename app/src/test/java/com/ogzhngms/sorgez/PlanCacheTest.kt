@@ -25,6 +25,7 @@ class PlanCacheTest {
         assertEquals(key, planKey(rome.copy(destination = " roma "), "Turkish", Currency.TRY))
         assertEquals(key, planKey(rome.copy(interests = setOf(Interest.CULTURE, Interest.FOOD)), "Turkish", Currency.TRY))
         assertNotEquals(key, planKey(rome.copy(days = 4), "Turkish", Currency.TRY))
+        assertNotEquals(key, planKey(rome.copy(month = 8), "Turkish", Currency.TRY))
         assertNotEquals(key, planKey(rome, "English", Currency.TRY))
         assertNotEquals(key, planKey(rome, "Turkish", Currency.EUR))
     }

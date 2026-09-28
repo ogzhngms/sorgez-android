@@ -55,6 +55,12 @@
     <string name="confirm_title">هل أنت مستعد للتخطيط؟</string>
     <string name="label_destination">الوجهة</string>
     <string name="label_days">المدة</string>
+    <string name="when_title">متى ستسافر؟</string>
+    <string name="when_unknown">لم أحدد بعد</string>
+    <string name="label_when">متى</string>
+    <string name="days_weekend">عطلة نهاية الأسبوع</string>
+    <string name="days_week">أسبوع واحد</string>
+    <string name="days_two_weeks">أسبوعان</string>
     <string name="label_companions">مع</string>
     <string name="label_budget">الميزانية</string>
     <string name="label_interests">الاهتمامات</string>

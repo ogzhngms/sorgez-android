@@ -2,6 +2,8 @@ package com.ogzhngms.sorgez
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import java.time.Month
+import java.time.format.TextStyle
 import java.util.Locale
 
 // Wizard order; TripViewModel and the question screen both follow this list.
@@ -42,6 +44,8 @@ enum class Interest(@StringRes val label: Int, val prompt: String, @DrawableRes 
 data class TripAnswers(
     val destination: String = "",
     val days: Int = 3,
+    // 1 for January to 12 for December; null when the traveller does not know yet.
+    val month: Int? = null,
     val companions: Companions = Companions.SOLO,
     val budget: Budget = Budget.MEDIUM,
     val interests: Set<Interest> = emptySet(),
@@ -56,6 +60,7 @@ const val SYSTEM_PROMPT =
 fun buildPrompt(answers: TripAnswers, language: String, currency: Currency = Currency.TRY): String = buildString {
     appendLine("Destination: ${answers.destination.trim()}")
     appendLine("Length: exactly ${answers.days} days")
+    answers.month?.let { appendLine("Month: ${Month.of(it).getDisplayName(TextStyle.FULL, Locale.ENGLISH)}, so suit the plan to that season and its weather") }
     appendLine("Travelling: ${answers.companions.prompt}")
     appendLine("Budget: ${answers.budget.prompt}")
     appendLine("Currency: ${currency.name}")
