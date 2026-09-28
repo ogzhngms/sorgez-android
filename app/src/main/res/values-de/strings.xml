@@ -78,7 +78,6 @@
     <string name="interests_none">Keine Vorliebe</string>
     <string name="show_prompt">Prompt anzeigen</string>
     <string name="hide_prompt">Prompt ausblenden</string>
-    <string name="demo_banner">Demomodus: Es gibt keinen API-Schlüssel, daher wird ein Beispielplan angezeigt.</string>
     <string name="action_edit">Bearbeiten</string>
     <string name="action_plan">OK, planen</string>
 
@@ -94,7 +93,7 @@
     <string name="action_new_plan">Neuer Plan</string>
 
     <string name="error_title">Der Plan konnte nicht erstellt werden</string>
-    <string name="error_api_key">Der API-Schlüssel wurde abgelehnt. Prüfe GEMINI_API_KEY in local.properties.</string>
+    <string name="error_api_key">Der KI-Dienst ist für diese App noch nicht eingerichtet. Versuche es später erneut.</string>
     <string name="error_rate_limit">Zu viele Anfragen. Warte kurz und versuche es erneut.</string>
     <string name="error_busy">Die KI ist gerade stark ausgelastet. Versuche es in ein paar Minuten erneut.</string>
     <string name="error_network">Keine Verbindung. Prüfe dein Internet und versuche es erneut.</string>

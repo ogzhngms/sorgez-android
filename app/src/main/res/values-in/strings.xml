@@ -77,7 +77,6 @@
     <string name="interests_none">Tidak ada preferensi</string>
     <string name="show_prompt">Tampilkan prompt</string>
     <string name="hide_prompt">Sembunyikan prompt</string>
-    <string name="demo_banner">Mode demo: tidak ada kunci API, jadi rencana contoh yang ditampilkan.</string>
     <string name="action_edit">Ubah</string>
     <string name="action_plan">Oke, buat rencana</string>
 
@@ -93,7 +92,7 @@
     <string name="action_new_plan">Rencana baru</string>
 
     <string name="error_title">Rencana tidak dapat dibuat</string>
-    <string name="error_api_key">Kunci API ditolak. Periksa GEMINI_API_KEY di local.properties.</string>
+    <string name="error_api_key">Layanan AI belum disiapkan untuk aplikasi ini. Coba lagi nanti.</string>
     <string name="error_rate_limit">Terlalu banyak permintaan. Tunggu sebentar lalu coba lagi.</string>
     <string name="error_busy">AI sedang sangat sibuk. Coba lagi dalam beberapa menit.</string>
     <string name="error_network">Tidak ada koneksi. Periksa internetmu lalu coba lagi.</string>

@@ -78,7 +78,6 @@
     <string name="interests_none">Fərqi yoxdur</string>
     <string name="show_prompt">Promptu göstər</string>
     <string name="hide_prompt">Promptu gizlət</string>
-    <string name="demo_banner">Demo rejimi: API açarı yoxdur, ona görə nümunə plan göstərilir.</string>
     <string name="action_edit">Redaktə et</string>
     <string name="action_plan">Bəli, planla</string>
 
@@ -94,7 +93,7 @@
     <string name="action_new_plan">Yeni plan</string>
 
     <string name="error_title">Plan yaradıla bilmədi</string>
-    <string name="error_api_key">API açarı qəbul edilmədi. local.properties faylında GEMINI_API_KEY dəyərini yoxla.</string>
+    <string name="error_api_key">Süni intellekt xidməti bu tətbiq üçün hələ qurulmayıb. Sonra yenidən cəhd et.</string>
     <string name="error_rate_limit">Çox sorğu göndərildi. Bir az gözləyib yenidən cəhd et.</string>
     <string name="error_busy">Süni intellekt hazırda çox məşğuldur. Bir neçə dəqiqədən sonra yenidən cəhd et.</string>
     <string name="error_network">Bağlantı yoxdur. İnterneti yoxlayıb yenidən cəhd et.</string>

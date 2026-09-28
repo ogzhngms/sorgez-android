@@ -93,7 +93,7 @@ import java.util.Locale
 import org.json.JSONObject
 
 @Composable
-fun SorGezApp(vm: TripViewModel, demo: Boolean, onLanguageChange: (Language) -> Unit = {}) {
+fun SorGezApp(vm: TripViewModel, onLanguageChange: (Language) -> Unit = {}) {
     val context = LocalContext.current
     var currency by remember { mutableStateOf(AppSettings.currency(context)) }
     val language = Language.entries.firstOrNull { it.tag == Locale.getDefault().language }
@@ -119,9 +119,9 @@ fun SorGezApp(vm: TripViewModel, demo: Boolean, onLanguageChange: (Language) -> 
                         onBack = vm::back,
                     )
                     is Screen.Question -> QuestionScreen(screen.step, vm.answers, vm::update, vm::next, back)
-                    Screen.Confirm -> ConfirmScreen(vm.answers, currency, demo, onPlan = vm::submit, onEdit = vm::back)
+                    Screen.Confirm -> ConfirmScreen(vm.answers, currency, onPlan = vm::submit, onEdit = vm::back)
                     Screen.Loading -> LoadingScreen(onCancel = vm::back)
-                    is Screen.Result -> ResultScreen(screen, demo, onNewPlan = vm::restart)
+                    is Screen.Result -> ResultScreen(screen, onNewPlan = vm::restart)
                     is Screen.Failed -> FailedScreen(screen, onRetry = vm::submit, onEdit = vm::back)
                 }
             }
@@ -294,7 +294,7 @@ private fun <T> Choices(options: List<T>, selected: (T) -> Boolean, label: @Comp
 }
 
 @Composable
-private fun ConfirmScreen(answers: TripAnswers, currency: Currency, demo: Boolean, onPlan: () -> Unit, onEdit: () -> Unit) {
+private fun ConfirmScreen(answers: TripAnswers, currency: Currency, onPlan: () -> Unit, onEdit: () -> Unit) {
     var showPrompt by rememberSaveable { mutableStateOf(false) }
     Column(Modifier.fillMaxSize().padding(24.dp)) {
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -315,7 +315,6 @@ private fun ConfirmScreen(answers: TripAnswers, currency: Currency, demo: Boolea
                 }
             }
             Text(stringResource(R.string.confirm_body), color = MaterialTheme.colorScheme.onSurfaceVariant)
-            if (demo) DemoBanner()
             TextButton(onClick = { showPrompt = !showPrompt }) {
                 Text(stringResource(if (showPrompt) R.string.hide_prompt else R.string.show_prompt))
             }
@@ -358,7 +357,7 @@ private fun LoadingScreen(onCancel: () -> Unit) {
 }
 
 @Composable
-private fun ResultScreen(result: Screen.Result, demo: Boolean, onNewPlan: () -> Unit) {
+private fun ResultScreen(result: Screen.Result, onNewPlan: () -> Unit) {
     val itinerary = result.itinerary
     var showJson by rememberSaveable { mutableStateOf(false) }
     LazyColumn(
@@ -366,7 +365,6 @@ private fun ResultScreen(result: Screen.Result, demo: Boolean, onNewPlan: () -> 
         contentPadding = PaddingValues(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        if (demo) item { DemoBanner() }
         item {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(itinerary.title, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
@@ -444,18 +442,6 @@ private fun FailedScreen(failed: Screen.Failed, onRetry: () -> Unit, onEdit: () 
         Spacer(Modifier.height(12.dp))
         Button(onClick = onRetry, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_retry)) }
         OutlinedButton(onClick = onEdit, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_edit)) }
-    }
-}
-
-@Composable
-private fun DemoBanner() {
-    Surface(color = MaterialTheme.colorScheme.secondaryContainer, shape = MaterialTheme.shapes.medium) {
-        Text(
-            stringResource(R.string.demo_banner),
-            color = MaterialTheme.colorScheme.onSecondaryContainer,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(12.dp),
-        )
     }
 }
 

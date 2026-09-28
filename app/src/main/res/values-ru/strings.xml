@@ -80,7 +80,6 @@
     <string name="interests_none">Без предпочтений</string>
     <string name="show_prompt">Показать промпт</string>
     <string name="hide_prompt">Скрыть промпт</string>
-    <string name="demo_banner">Демо-режим: нет ключа API, поэтому показан пример плана.</string>
     <string name="action_edit">Изменить</string>
     <string name="action_plan">ОК, спланировать</string>
 
@@ -96,7 +95,7 @@
     <string name="action_new_plan">Новый план</string>
 
     <string name="error_title">Не удалось создать план</string>
-    <string name="error_api_key">Ключ API отклонён. Проверь GEMINI_API_KEY в local.properties.</string>
+    <string name="error_api_key">Сервис ИИ для этого приложения ещё не настроен. Повторите попытку позже.</string>
     <string name="error_rate_limit">Слишком много запросов. Подожди немного и попробуй снова.</string>
     <string name="error_busy">ИИ сейчас сильно загружен. Попробуй снова через несколько минут.</string>
     <string name="error_network">Нет соединения. Проверь интернет и попробуй снова.</string>

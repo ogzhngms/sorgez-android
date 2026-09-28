@@ -1,145 +1,114 @@
 package com.ogzhngms.sorgez
 
-import com.sun.net.httpserver.HttpServer
-import java.io.File
-import java.net.InetSocketAddress
-import java.util.concurrent.Executors
+import com.google.firebase.ai.type.Candidate
+import com.google.firebase.ai.type.Content
+import com.google.firebase.ai.type.FinishReason
+import com.google.firebase.ai.type.GenerateContentResponse
+import com.google.firebase.ai.type.InvalidAPIKeyException
+import com.google.firebase.ai.type.PromptBlockedException
+import com.google.firebase.ai.type.QuotaExceededException
+import com.google.firebase.ai.type.RequestTimeoutException
+import com.google.firebase.ai.type.ResponseStoppedException
+import com.google.firebase.ai.type.ServerException
+import com.google.firebase.ai.type.UnknownException
+import java.net.UnknownHostException
 import kotlinx.coroutines.runBlocking
-import org.json.JSONArray
-import org.json.JSONObject
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 import org.junit.Test
 
-// Runs GeminiPlanner against a local fake of the Gemini API: checks what the app sends and how it reads replies.
+// Runs the model fallback against a fake of Firebase AI Logic that answers or fails per model.
 class GeminiPlannerTest {
-    private val sample = File("src/main/res/raw/sample_itinerary.json").readText()
-
-    @Volatile private var status = 200
-    @Volatile private var reply = ""
-    @Volatile private var sentKey = ""
-    @Volatile private var sentBody = JSONObject()
-    @Volatile private var unavailable = emptyMap<String, Int>()
-    @Volatile private var slow = emptySet<String>()
     private val asked = mutableListOf<String>()
 
-    private val server = HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0).apply {
-        createContext("/v1beta/models/") { exchange ->
-            val model = exchange.requestURI.path.removePrefix("/v1beta/models/").removeSuffix(":generateContent")
-            synchronized(asked) { asked += model }
-            sentKey = exchange.requestHeaders.getFirst("x-goog-api-key").orEmpty()
-            sentBody = JSONObject(exchange.requestBody.bufferedReader().readText())
-            if (model in slow) Thread.sleep(1_500)
-            val down = unavailable[model]
-            val bytes = (if (down != null) """{"error": {"code": $down}}""" else reply).toByteArray()
-            exchange.responseHeaders.add("Content-Type", "application/json")
-            exchange.sendResponseHeaders(down ?: status, bytes.size.toLong())
-            runCatching { exchange.responseBody.use { it.write(bytes) } }
+    // Each model name maps to what the fake does: return text or throw.
+    private fun planner(vararg outcomes: Pair<String, Any>) = GeminiPlanner { model, prompt ->
+        asked += model
+        assertEquals("Destination: Rome", prompt)
+        when (val outcome = outcomes.toMap()[model] ?: "plan from $model") {
+            is Throwable -> throw outcome
+            else -> outcome as String
         }
-        executor = Executors.newCachedThreadPool { Thread(it).apply { isDaemon = true } }
-        start()
-    }
-    private val planner = GeminiPlanner("test-key", "http://127.0.0.1:${server.address.port}", readTimeoutMs = 500)
-
-    @After
-    fun stop() = server.stop(0)
-
-    private fun plan() = runBlocking { planner.plan("Destination: Rome") }
-    private fun asked() = synchronized(asked) { asked.toList() }
-
-    @Test
-    fun requestAsksForSchemaJsonAndSkipsThinkingParts() {
-        reply = candidate("STOP", JSONObject().put("text", "planning…").put("thought", true), JSONObject().put("text", sample))
-
-        assertEquals(sample, plan())
-        assertEquals(listOf("gemini-3.8-flash"), asked())
-        assertEquals("test-key", sentKey)
-        val config = sentBody.getJSONObject("generationConfig")
-        assertEquals("application/json", config.getString("responseMimeType"))
-        assertEquals(ITINERARY_SCHEMA, plain(config.getJSONObject("responseJsonSchema")))
-        assertEquals(SYSTEM_PROMPT, sentBody.getJSONObject("systemInstruction").getJSONArray("parts").getJSONObject(0).getString("text"))
-        assertEquals("Destination: Rome", sentBody.getJSONArray("contents").getJSONObject(0).getJSONArray("parts").getJSONObject(0).getString("text"))
     }
 
-    // Overloaded, out of free quota and retired models are skipped without the user noticing.
-    @Test
-    fun modelsThatCannotServeAreSkipped() {
-        unavailable = mapOf("gemini-3.8-flash" to 503, "gemini-3.7-flash" to 429, "gemini-3.6-flash" to 404)
-        reply = candidate("STOP", JSONObject().put("text", sample))
-
-        assertEquals(sample, plan())
-        assertEquals(listOf("gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash"), asked())
-    }
-
-    // A model that hangs is treated like an overloaded one, not like a lost connection.
-    @Test
-    fun slowModelIsSkipped() {
-        slow = setOf("gemini-3.8-flash")
-        reply = candidate("STOP", JSONObject().put("text", sample))
-
-        assertEquals(sample, plan())
-        assertEquals(listOf("gemini-3.8-flash", "gemini-3.7-flash"), asked())
-    }
-
-    @Test
-    fun noNetworkStopsAtOnce() {
-        val offline = GeminiPlanner("test-key", "http://127.0.0.1:1")
-        val error = runCatching { runBlocking { offline.plan("Destination: Rome") } }.exceptionOrNull()
-        assertEquals(R.string.error_network, errorMessage(error!!))
-    }
-
-    @Test
-    fun everyModelOverloadedSaysTryLater() {
-        status = 503
-        reply = """{"error": {"code": 503, "status": "UNAVAILABLE"}}"""
-        assertEquals(R.string.error_busy, failure())
-        assertEquals(GEMINI_MODELS, asked())
-    }
-
-    @Test
-    fun blockedPromptBecomesAFriendlyError() {
-        reply = JSONObject().put("promptFeedback", JSONObject().put("blockReason", "SAFETY")).toString()
-        assertEquals(R.string.error_refusal, failure())
-    }
-
-    @Test
-    fun truncatedPlanIsNotParsed() {
-        reply = candidate("MAX_TOKENS", JSONObject().put("text", sample.take(100)))
-        assertEquals(R.string.error_too_long, failure())
-    }
-
-    // A bad key fails the same way on every model, so there is no point asking the next one.
-    @Test
-    fun wrongKeyPointsAtLocalPropertiesWithoutTryingOtherModels() {
-        status = 400
-        reply = """{"error": {"code": 400, "status": "INVALID_ARGUMENT", "details": [{"reason": "API_KEY_INVALID"}]}}"""
-        assertEquals(R.string.error_api_key, failure())
-        assertEquals(1, asked().size)
-    }
-
-    private fun failure(): Int = try {
-        plan()
+    private fun failure(planner: GeminiPlanner): Int = try {
+        runBlocking { planner.plan("Destination: Rome") }
         fail("plan() should have thrown")
         0
     } catch (e: Exception) {
         errorMessage(e)
     }
 
-    private fun candidate(finishReason: String, vararg parts: JSONObject) = JSONObject()
-        .put(
-            "candidates",
-            JSONArray().put(
-                JSONObject()
-                    .put("content", JSONObject().put("role", "model").put("parts", JSONArray(parts.toList())))
-                    .put("finishReason", finishReason),
-            ),
-        )
-        .toString()
-
-    private fun plain(value: Any?): Any? = when (value) {
-        is JSONObject -> value.keys().asSequence().associateWith { plain(value.get(it)) }
-        is JSONArray -> List(value.length()) { plain(value.get(it)) }
-        else -> value
+    @Test
+    fun firstModelAnswers() {
+        assertEquals("plan from gemini-3.8-flash", runBlocking { planner().plan("Destination: Rome") })
+        assertEquals(listOf("gemini-3.8-flash"), asked)
     }
+
+    // Overloaded, out of free quota, retired and too slow models are skipped without the user noticing.
+    @Test
+    fun modelsThatCannotServeAreSkipped() {
+        val planner = planner(
+            "gemini-3.8-flash" to make<ServerException>("Unexpected Response: 503", null),
+            "gemini-3.7-flash" to make<QuotaExceededException>("quota", null),
+            "gemini-3.6-flash" to make<ServerException>("URL not found", null),
+            "gemini-3.5-flash" to make<RequestTimeoutException>("timed out", null, emptyList<Any>()),
+        )
+        assertEquals("plan from gemini-3.5-flash-lite", runBlocking { planner.plan("Destination: Rome") })
+        assertEquals(GEMINI_MODELS.take(5), asked)
+    }
+
+    @Test
+    fun noNetworkStopsAtOnce() {
+        val offline = make<UnknownException>("Something unexpected happened.", UnknownHostException("firebasevertexai.googleapis.com"))
+        assertEquals(R.string.error_network, failure(planner("gemini-3.8-flash" to offline)))
+        assertEquals(1, asked.size)
+    }
+
+    @Test
+    fun everyModelOverloadedSaysTryLater() {
+        val busy = make<ServerException>("Unexpected Response: 503", null)
+        assertEquals(R.string.error_busy, failure(planner(*GEMINI_MODELS.map { it to busy }.toTypedArray())))
+        assertEquals(GEMINI_MODELS, asked)
+    }
+
+    @Test
+    fun everyModelOutOfQuotaSaysWait() {
+        val quota = make<QuotaExceededException>("quota", null)
+        assertEquals(R.string.error_rate_limit, failure(planner(*GEMINI_MODELS.map { it to quota }.toTypedArray())))
+    }
+
+    @Test
+    fun blockedPromptIsNotRetried() {
+        assertEquals(R.string.error_refusal, failure(planner("gemini-3.8-flash" to make<PromptBlockedException>("blocked", null))))
+        assertEquals(1, asked.size)
+    }
+
+    @Test
+    fun truncatedPlanIsNotParsed() {
+        val cut = make<GenerateContentResponse>(
+            listOf(make<Candidate>(make<Content>(emptyList<Any>()), emptyList<Any>(), null, FinishReason.MAX_TOKENS, null, null, null)),
+            null,
+            null,
+        )
+        assertEquals(R.string.error_too_long, failure(planner("gemini-3.8-flash" to make<ResponseStoppedException>(cut, null))))
+    }
+
+    // A setup problem fails the same way on every model, so there is no point asking the next one.
+    @Test
+    fun setupProblemIsNotRetried() {
+        assertEquals(R.string.error_api_key, failure(planner("gemini-3.8-flash" to make<InvalidAPIKeyException>("API key not valid", null))))
+        assertEquals(1, asked.size)
+    }
+
+    @Test
+    fun itinerarySchemaConvertsForTheSdk() {
+        jsonSchema(ITINERARY_SCHEMA)
+    }
+
+    // The SDK's exception and response constructors are internal to Kotlin, so tests build them reflectively.
+    private inline fun <reified T> make(vararg args: Any?): T = T::class.java.constructors.first { constructor ->
+        constructor.parameterCount == args.size &&
+            constructor.parameterTypes.zip(args).all { (type, arg) -> arg == null || type.isInstance(arg) }
+    }.newInstance(*args) as T
 }

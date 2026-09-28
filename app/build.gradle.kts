@@ -1,19 +1,8 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.services)
 }
-
-val localProperties = Properties().apply {
-    val file = rootProject.file("local.properties")
-    if (file.exists()) file.inputStream().use(::load)
-}
-
-// Blank key = demo mode: the app plays back a bundled sample plan instead of calling Gemini.
-val geminiApiKey: String = providers.gradleProperty("GEMINI_API_KEY").orNull
-    ?: localProperties.getProperty("GEMINI_API_KEY", "")
 
 android {
     namespace = "com.ogzhngms.sorgez"
@@ -29,7 +18,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
     }
 
     buildTypes {
@@ -53,6 +41,11 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.ai)
+    // JsonSchema.obj returns a kotlinx JsonObject schema, so the type must be on the compile classpath.
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.firebase.appcheck.playintegrity)
+    debugImplementation(libs.firebase.appcheck.debug)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)

@@ -77,7 +77,6 @@
     <string name="interests_none">こだわりなし</string>
     <string name="show_prompt">プロンプトを表示</string>
     <string name="hide_prompt">プロンプトを隠す</string>
-    <string name="demo_banner">デモモード：API キーがないため、サンプルプランを表示しています。</string>
     <string name="action_edit">編集</string>
     <string name="action_plan">OK、作成する</string>
 
@@ -93,7 +92,7 @@
     <string name="action_new_plan">新しいプラン</string>
 
     <string name="error_title">プランを作成できませんでした</string>
-    <string name="error_api_key">API キーが拒否されました。local.properties の GEMINI_API_KEY を確認してください。</string>
+    <string name="error_api_key">このアプリの AI サービスはまだ設定されていません。後でもう一度お試しください。</string>
     <string name="error_rate_limit">リクエストが多すぎます。少し待ってからもう一度お試しください。</string>
     <string name="error_busy">AI が現在とても混雑しています。数分後にもう一度お試しください。</string>
     <string name="error_network">接続できません。インターネットを確認してもう一度お試しください。</string>

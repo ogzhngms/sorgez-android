@@ -79,7 +79,6 @@
     <string name="interests_none">Pas de préférence</string>
     <string name="show_prompt">Afficher le prompt</string>
     <string name="hide_prompt">Masquer le prompt</string>
-    <string name="demo_banner">Mode démo : aucune clé API, un plan d\'exemple est donc affiché.</string>
     <string name="action_edit">Modifier</string>
     <string name="action_plan">OK, planifier</string>
 
@@ -95,7 +94,7 @@
     <string name="action_new_plan">Nouveau plan</string>
 
     <string name="error_title">Impossible de créer le plan</string>
-    <string name="error_api_key">La clé API a été refusée. Vérifie GEMINI_API_KEY dans local.properties.</string>
+    <string name="error_api_key">Le service d\'IA n\'est pas encore configuré pour cette app. Réessaie plus tard.</string>
     <string name="error_rate_limit">Trop de requêtes. Attends un instant et réessaie.</string>
     <string name="error_busy">L\'IA est très sollicitée en ce moment. Réessaie dans quelques minutes.</string>
     <string name="error_network">Pas de connexion. Vérifie ton internet et réessaie.</string>

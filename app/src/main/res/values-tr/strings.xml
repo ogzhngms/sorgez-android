@@ -78,7 +78,6 @@
     <string name="interests_none">Fark etmez</string>
     <string name="show_prompt">Prompt\'u göster</string>
     <string name="hide_prompt">Prompt\'u gizle</string>
-    <string name="demo_banner">Demo modu: API anahtarı yok, bu yüzden örnek bir plan gösterilecek.</string>
     <string name="action_edit">Düzenle</string>
     <string name="action_plan">Tamam, planla</string>
 
@@ -94,7 +93,7 @@
     <string name="action_new_plan">Yeni plan</string>
 
     <string name="error_title">Plan oluşturulamadı</string>
-    <string name="error_api_key">API anahtarı reddedildi. local.properties içindeki GEMINI_API_KEY değerini kontrol et.</string>
+    <string name="error_api_key">Yapay zekâ hizmeti bu uygulama için henüz hazır değil. Daha sonra tekrar dene.</string>
     <string name="error_rate_limit">Çok fazla istek gönderildi. Biraz bekleyip tekrar dene.</string>
     <string name="error_busy">Yapay zekâ şu an çok yoğun. Birkaç dakika sonra tekrar dene.</string>
     <string name="error_network">Bağlantı yok. İnternetini kontrol edip tekrar dene.</string>

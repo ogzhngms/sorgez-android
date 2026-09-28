@@ -78,7 +78,6 @@
     <string name="interests_none">कोई पसंद नहीं</string>
     <string name="show_prompt">प्रॉम्प्ट दिखाएँ</string>
     <string name="hide_prompt">प्रॉम्प्ट छिपाएँ</string>
-    <string name="demo_banner">डेमो मोड: कोई API कुंजी नहीं है, इसलिए एक नमूना योजना दिखाई जा रही है।</string>
     <string name="action_edit">बदलें</string>
     <string name="action_plan">ठीक है, योजना बनाएँ</string>
 
@@ -94,7 +93,7 @@
     <string name="action_new_plan">नई योजना</string>
 
     <string name="error_title">योजना नहीं बन सकी</string>
-    <string name="error_api_key">API कुंजी अस्वीकार कर दी गई। local.properties में GEMINI_API_KEY जाँचें।</string>
+    <string name="error_api_key">इस ऐप के लिए AI सेवा अभी सेट नहीं है। बाद में फिर कोशिश करें।</string>
     <string name="error_rate_limit">बहुत ज़्यादा अनुरोध। थोड़ा रुककर फिर से कोशिश करें।</string>
     <string name="error_busy">AI अभी बहुत व्यस्त है। कुछ मिनट बाद फिर से कोशिश करें।</string>
     <string name="error_network">कनेक्शन नहीं है। अपना इंटरनेट जाँचकर फिर से कोशिश करें।</string>

@@ -77,7 +77,6 @@
     <string name="interests_none">상관없음</string>
     <string name="show_prompt">프롬프트 보기</string>
     <string name="hide_prompt">프롬프트 숨기기</string>
-    <string name="demo_banner">데모 모드: API 키가 없어서 예시 계획을 보여 줍니다.</string>
     <string name="action_edit">수정</string>
     <string name="action_plan">좋아요, 계획하기</string>
 
@@ -93,7 +92,7 @@
     <string name="action_new_plan">새 계획</string>
 
     <string name="error_title">계획을 만들지 못했어요</string>
-    <string name="error_api_key">API 키가 거부되었습니다. local.properties의 GEMINI_API_KEY를 확인하세요.</string>
+    <string name="error_api_key">이 앱의 AI 서비스가 아직 설정되지 않았습니다. 나중에 다시 시도하세요.</string>
     <string name="error_rate_limit">요청이 너무 많아요. 잠시 후 다시 시도하세요.</string>
     <string name="error_busy">지금 AI가 매우 바빠요. 몇 분 후에 다시 시도하세요.</string>
     <string name="error_network">연결되지 않았어요. 인터넷을 확인하고 다시 시도하세요.</string>

@@ -37,7 +37,7 @@ class TripFlowTest {
     fun answersBecomeAPlanOnScreen() {
         var sent: TripAnswers? = null
         val vm = TripViewModel { sent = it; sample }
-        compose.setContent { SorGezTheme { SorGezApp(vm, demo = false) } }
+        compose.setContent { SorGezTheme { SorGezApp(vm) } }
 
         compose.onNodeWithText(text(R.string.action_start)).performClick()
         compose.onNodeWithText(text(R.string.action_next)).assertIsNotEnabled()
@@ -66,7 +66,7 @@ class TripFlowTest {
     fun failedPlanCanBeRetried() {
         var online = false
         val vm = TripViewModel { if (online) sample else error("offline") }
-        compose.setContent { SorGezTheme { SorGezApp(vm, demo = false) } }
+        compose.setContent { SorGezTheme { SorGezApp(vm) } }
         vm.start()
         vm.update { it.copy(destination = "Rome") }
         repeat(QUESTIONS.size) { vm.next() }
@@ -83,7 +83,7 @@ class TripFlowTest {
     @Test
     fun backClosesTheKeyboardBeforeLeavingTheStep() {
         val vm = TripViewModel { sample }
-        compose.setContent { SorGezTheme { SorGezApp(vm, demo = false) } }
+        compose.setContent { SorGezTheme { SorGezApp(vm) } }
         vm.start()
         vm.update { it.copy(destination = "Rome") }
         repeat(4) { vm.next() }
@@ -104,7 +104,7 @@ class TripFlowTest {
     fun languageButtonOpensTheFlagList() {
         var picked: Language? = null
         val vm = TripViewModel { sample }
-        compose.setContent { SorGezTheme { SorGezApp(vm, demo = false, onLanguageChange = { picked = it }) } }
+        compose.setContent { SorGezTheme { SorGezApp(vm, onLanguageChange = { picked = it }) } }
         vm.openProfile()
 
         compose.onNodeWithContentDescription(text(R.string.language_title), substring = true).performScrollTo().performClick()

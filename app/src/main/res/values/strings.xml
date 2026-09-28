@@ -80,7 +80,6 @@
     <string name="interests_none">No preference</string>
     <string name="show_prompt">Show prompt</string>
     <string name="hide_prompt">Hide prompt</string>
-    <string name="demo_banner">Demo mode: there is no API key, so a sample plan is shown.</string>
     <string name="action_edit">Edit</string>
     <string name="action_plan">OK, plan it</string>
 
@@ -96,7 +95,7 @@
     <string name="action_new_plan">New plan</string>
 
     <string name="error_title">The plan could not be created</string>
-    <string name="error_api_key">The API key was rejected. Check GEMINI_API_KEY in local.properties.</string>
+    <string name="error_api_key">The AI service isn\'t set up for this app yet. Try again later.</string>
     <string name="error_rate_limit">Too many requests. Wait a moment and try again.</string>
     <string name="error_busy">The AI is very busy right now. Try again in a few minutes.</string>
     <string name="error_network">No connection. Check your internet and try again.</string>
