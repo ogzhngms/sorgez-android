@@ -1,11 +1,11 @@
 package com.ogzhngms.sorgez.ui
 
 import androidx.activity.compose.BackHandler
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ContentTransform
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -14,21 +14,22 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -38,12 +39,15 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -59,9 +63,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -88,7 +94,9 @@ import com.ogzhngms.sorgez.TripAnswers
 import com.ogzhngms.sorgez.TripViewModel
 import com.ogzhngms.sorgez.buildPrompt
 import com.ogzhngms.sorgez.findPlace
+import com.ogzhngms.sorgez.normalize
 import com.ogzhngms.sorgez.promptLanguage
+import com.ogzhngms.sorgez.suggestPlaces
 import java.util.Locale
 import org.json.JSONObject
 
@@ -169,10 +177,10 @@ private fun QuestionScreen(
         } else Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
             when (step) {
                 1 -> DayPicker(answers.days) { days -> onUpdate { it.copy(days = days) } }
-                2 -> Choices(Companions.entries, { it == answers.companions }, { stringResource(it.label) }) { choice ->
+                2 -> IconChoices(Companions.entries, { it == answers.companions }, { it.label }, { it.icon }) { choice ->
                     onUpdate { it.copy(companions = choice) }
                 }
-                3 -> Choices(Budget.entries, { it == answers.budget }, { stringResource(it.label) }) { choice ->
+                3 -> IconChoices(Budget.entries, { it == answers.budget }, { it.label }, { it.icon }, columns = 3) { choice ->
                     onUpdate { it.copy(budget = choice) }
                 }
                 4 -> {
@@ -222,9 +230,15 @@ private fun DayPicker(days: Int, onChange: (Int) -> Unit) {
     }
 }
 
-// Empty, it offers popular places; once something is typed, the Earth flies to it and drops a pin.
+// The Earth spins under the field; typing offers matching places below it, and the Earth flies to
+// whatever is written and drops a pin. Picking a suggestion fills the field and closes the list.
 @Composable
 private fun DestinationStep(destination: String, onChange: (String) -> Unit, onNext: () -> Unit, modifier: Modifier) {
+    val focusManager = LocalFocusManager.current
+    val place = remember(destination) { findPlace(destination) }
+    val suggestions = remember(destination) {
+        suggestPlaces(destination).takeUnless { names -> names.any { normalize(it) == normalize(destination) } }.orEmpty()
+    }
     Column(modifier) {
         OutlinedTextField(
             value = destination,
@@ -235,46 +249,67 @@ private fun DestinationStep(destination: String, onChange: (String) -> Unit, onN
             keyboardActions = KeyboardActions(onNext = { onNext() }),
             modifier = Modifier.fillMaxWidth(),
         )
-        Spacer(Modifier.height(16.dp))
-        Crossfade(destination.isBlank(), Modifier.weight(1f), label = "destination") { empty ->
-            if (empty) {
-                PopularPlaces(onChange)
-            } else {
-                val place = remember(destination) { findPlace(destination) }
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    DestinationEarth(place, Modifier.aspectRatio(1f, matchHeightConstraintsFirst = true))
+        Box(Modifier.weight(1f).fillMaxWidth().padding(top = 8.dp)) {
+            DestinationEarth(place, Modifier.align(Alignment.Center).aspectRatio(1f, matchHeightConstraintsFirst = true))
+            if (suggestions.isNotEmpty()) {
+                Card(Modifier.fillMaxWidth()) {
+                    suggestions.forEach { name ->
+                        Text(
+                            name,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onChange(name); focusManager.clearFocus() }
+                                .padding(horizontal = 16.dp, vertical = 14.dp),
+                        )
+                    }
                 }
             }
         }
     }
 }
 
-private class Popular(val flag: String, @StringRes val name: Int, @StringRes val about: Int)
-
-private val POPULAR = listOf(
-    Popular("🇹🇷", R.string.place_cappadocia, R.string.about_cappadocia),
-    Popular("🇮🇹", R.string.place_rome, R.string.about_rome),
-    Popular("🇫🇷", R.string.place_paris, R.string.about_paris),
-    Popular("🇯🇵", R.string.place_tokyo, R.string.about_tokyo),
-    Popular("🇪🇸", R.string.place_barcelona, R.string.about_barcelona),
-    Popular("🇦🇪", R.string.place_dubai, R.string.about_dubai),
-)
-
+// Large tiles, two to a row unless told otherwise, each an icon over its label; the chosen one is outlined and tinted green.
 @Composable
-private fun PopularPlaces(onPick: (String) -> Unit) {
-    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text(stringResource(R.string.popular_title), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        POPULAR.chunked(2).forEach { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.height(IntrinsicSize.Min)) {
-                row.forEach { place ->
-                    val name = stringResource(place.name)
-                    Card(onClick = { onPick(name) }, modifier = Modifier.weight(1f).fillMaxHeight()) {
-                        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text("${place.flag}  $name", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
-                            Text(stringResource(place.about), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+private fun <T> IconChoices(
+    options: List<T>,
+    selected: (T) -> Boolean,
+    @StringRes label: (T) -> Int,
+    @DrawableRes icon: (T) -> Int,
+    columns: Int = 2,
+    onClick: (T) -> Unit,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        options.chunked(columns).forEach { row ->
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                row.forEach { option ->
+                    val chosen = selected(option)
+                    val colors = MaterialTheme.colorScheme
+                    OutlinedCard(
+                        onClick = { onClick(option) },
+                        modifier = Modifier.weight(1f).height(128.dp).semantics { this.selected = chosen },
+                        colors = CardDefaults.outlinedCardColors(
+                            containerColor = if (chosen) colors.primary.copy(alpha = 0.14f) else colors.surface,
+                        ),
+                        border = BorderStroke(if (chosen) 2.dp else 1.dp, if (chosen) colors.primary else colors.outlineVariant),
+                    ) {
+                        Column(
+                            Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically),
+                        ) {
+                            val tint = if (chosen) colors.primary else colors.onSurfaceVariant
+                            Icon(painterResource(icon(option)), contentDescription = null, tint = tint, modifier = Modifier.size(40.dp))
+                            Text(
+                                stringResource(label(option)),
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = if (chosen) FontWeight.Bold else FontWeight.Medium,
+                                color = if (chosen) colors.primary else colors.onSurface,
+                            )
                         }
                     }
                 }
+                repeat(columns - row.size) { Spacer(Modifier.weight(1f)) }
             }
         }
     }

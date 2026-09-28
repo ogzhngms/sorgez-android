@@ -1,5 +1,6 @@
 package com.ogzhngms.sorgez
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import java.util.Locale
 
@@ -15,17 +16,17 @@ val QUESTIONS = listOf(
 
 const val MAX_DAYS = 14
 
-enum class Companions(@StringRes val label: Int, val prompt: String) {
-    SOLO(R.string.companions_solo, "solo"),
-    PARTNER(R.string.companions_partner, "as a couple"),
-    FAMILY(R.string.companions_family, "with family"),
-    FRIENDS(R.string.companions_friends, "with friends"),
+enum class Companions(@StringRes val label: Int, val prompt: String, @DrawableRes val icon: Int) {
+    SOLO(R.string.companions_solo, "solo", R.drawable.ic_person),
+    PARTNER(R.string.companions_partner, "as a couple", R.drawable.ic_favorite),
+    FAMILY(R.string.companions_family, "with family", R.drawable.ic_family),
+    FRIENDS(R.string.companions_friends, "with friends", R.drawable.ic_group),
 }
 
-enum class Budget(@StringRes val label: Int, val prompt: String) {
-    LOW(R.string.budget_low, "low, keep costs down"),
-    MEDIUM(R.string.budget_medium, "mid-range"),
-    HIGH(R.string.budget_high, "luxury"),
+enum class Budget(@StringRes val label: Int, val prompt: String, @DrawableRes val icon: Int) {
+    LOW(R.string.budget_low, "low, keep costs down", R.drawable.ic_money_low),
+    MEDIUM(R.string.budget_medium, "mid-range", R.drawable.ic_money_mid),
+    HIGH(R.string.budget_high, "luxury", R.drawable.ic_money_high),
 }
 
 enum class Interest(@StringRes val label: Int, val prompt: String) {
