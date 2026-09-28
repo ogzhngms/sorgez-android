@@ -5,6 +5,7 @@ import com.google.firebase.ai.type.Content
 import com.google.firebase.ai.type.FinishReason
 import com.google.firebase.ai.type.GenerateContentResponse
 import com.google.firebase.ai.type.InvalidAPIKeyException
+import com.google.firebase.ai.type.PermissionMissingException
 import com.google.firebase.ai.type.PromptBlockedException
 import com.google.firebase.ai.type.QuotaExceededException
 import com.google.firebase.ai.type.RequestTimeoutException
@@ -74,6 +75,13 @@ class GeminiPlannerTest {
         assertEquals("plan from ${GEMINI_MODELS[1]}", planner.plan("Destination: Rome"))
         assertEquals(GEMINI_MODELS.take(2), asked)
         assertEquals(45_000L, currentTime)
+    }
+
+    // An older model this project may not use is skipped like a busy one.
+    @Test
+    fun aModelClosedToThisProjectIsSkipped() {
+        val closed = make<PermissionMissingException>("Permission denied for this model", null)
+        assertEquals("plan from ${GEMINI_MODELS[1]}", runBlocking { planner(GEMINI_MODELS[0] to closed).plan("Destination: Rome") })
     }
 
     @Test

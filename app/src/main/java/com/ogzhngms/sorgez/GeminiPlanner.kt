@@ -40,6 +40,9 @@ internal val GEMINI_MODELS = listOf(
     "gemini-3.5-flash",
     "gemini-3.5-flash-lite",
     "gemini-3.1-flash-lite",
+    // The 2.5 family is older and may be closed to new projects, but it has its own free quota.
+    "gemini-2.5-flash",
+    "gemini-2.5-flash-lite",
 )
 
 // Walks GEMINI_MODELS until one answers. `ask` sends the prompt to one model and returns its text;
@@ -47,7 +50,7 @@ internal val GEMINI_MODELS = listOf(
 // at once, and one that is merely slow gets company: after hedgeAfterMillis the next model starts alongside it,
 // the first answer wins and the others are cancelled, so one stuck model never holds the plan up.
 class GeminiPlanner(
-    private val hedgeAfterMillis: Long = 40_000,
+    private val hedgeAfterMillis: Long = 30_000,
     private val ask: suspend (model: String, prompt: String) -> String,
 ) {
     suspend fun plan(prompt: String): String = coroutineScope {
@@ -89,10 +92,11 @@ class GeminiPlanner(
     }
 }
 
-// Retired (404) or overloaded (5xx) models come back as ServerException; another model may still answer.
-// A rejected App Check token is also a ServerException, but no other model would accept it either.
-private fun cannotServe(e: Throwable) =
-    !appCheckRejected(e) && (e is ServerException || e is QuotaExceededException || e is RequestTimeoutException)
+// Retired (404) or overloaded (5xx) models come back as ServerException, and a model this project may not use
+// as PermissionMissingException; another model may still answer. A rejected App Check token is also a
+// ServerException, but no other model would accept it either.
+private fun cannotServe(e: Throwable) = !appCheckRejected(e) &&
+    (e is ServerException || e is QuotaExceededException || e is RequestTimeoutException || e is PermissionMissingException)
 
 // The service turned the app away because it could not prove it is the real app: a debug build whose token
 // is not registered yet, or a modified copy.
