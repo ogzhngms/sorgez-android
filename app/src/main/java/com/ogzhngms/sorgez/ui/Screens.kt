@@ -40,7 +40,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -101,7 +100,6 @@ import com.ogzhngms.sorgez.TripViewModel
 import com.ogzhngms.sorgez.findPlace
 import com.ogzhngms.sorgez.normalize
 import com.ogzhngms.sorgez.suggestPlaces
-import java.time.LocalDate
 import java.time.Month
 import java.time.format.TextStyle
 import java.util.Locale
@@ -288,22 +286,21 @@ private fun DayTiles(days: Int, onPick: (Int) -> Unit) {
     }
 }
 
-// "Not sure yet", then the next twelve months starting with this one, in the app's language.
+// "Not sure yet" across the top, then all twelve months, three to a row, so none hides off screen.
 @Composable
 private fun MonthPicker(month: Int?, onPick: (Int?) -> Unit) {
     val locale = Locale.getDefault()
-    val thisMonth = remember { LocalDate.now().monthValue }
-    val options = listOf<Int?>(null) + List(12) { (thisMonth - 1 + it) % 12 + 1 }
-    Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        options.forEach { option ->
-            SelectTile(option == month, { onPick(option) }, Modifier.height(44.dp)) { color ->
-                Text(
-                    option?.let { monthName(it, locale) } ?: stringResource(R.string.when_unknown),
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Medium,
-                    color = color,
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                )
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        SelectTile(month == null, { onPick(null) }, Modifier.fillMaxWidth().height(44.dp)) { color ->
+            Text(stringResource(R.string.when_unknown), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Medium, color = color)
+        }
+        (1..12).chunked(3).forEach { row ->
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                row.forEach { option ->
+                    SelectTile(option == month, { onPick(option) }, Modifier.weight(1f).height(44.dp)) { color ->
+                        Text(monthName(option, locale), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Medium, color = color)
+                    }
+                }
             }
         }
     }
