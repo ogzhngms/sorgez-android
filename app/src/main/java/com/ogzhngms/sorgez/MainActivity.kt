@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
     private val viewModel: TripViewModel by viewModels {
         viewModelFactory {
             initializer {
-                val gemini = GeminiPlanner(firebaseGemini())
+                val gemini = GeminiPlanner(ask = firebaseGemini())
                 TripViewModel { answers -> gemini.plan(buildPrompt(answers, promptLanguage(), AppSettings.currency(application))) }
             }
         }
