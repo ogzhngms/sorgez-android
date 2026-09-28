@@ -58,7 +58,7 @@
     <string name="action_next">التالي</string>
 
     <string name="confirm_title">هل أنت مستعد للتخطيط؟</string>
-    <string name="confirm_body">عند التأكيد تتحول إجاباتك إلى موجّه (prompt) للذكاء الاصطناعي، الذي يعيد الخطة بصيغة JSON.</string>
+    <string name="confirm_body">عند التأكيد يخطط الذكاء الاصطناعي رحلتك يومًا بيوم بناءً على هذه الإجابات. اضغط على أي سطر لتغييره.</string>
     <string name="label_destination">الوجهة</string>
     <string name="label_days">المدة</string>
     <string name="label_companions">مع</string>
@@ -82,6 +82,7 @@
     <string name="show_json">عرض JSON</string>
     <string name="hide_json">إخفاء JSON</string>
     <string name="action_new_plan">خطة جديدة</string>
+    <string name="action_share">مشاركة</string>
 
     <string name="error_title">تعذّر إنشاء الخطة</string>
     <string name="error_api_key">خدمة الذكاء الاصطناعي غير مهيأة لهذا التطبيق بعد. حاول مرة أخرى لاحقًا.</string>

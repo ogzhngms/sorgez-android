@@ -54,7 +54,7 @@
     <string name="action_next">İrəli</string>
 
     <string name="confirm_title">Plan hazırlansın?</string>
-    <string name="confirm_body">Təsdiqlədikdə cavabların süni intellekt üçün prompta çevrilir, o da planı JSON formatında qaytarır.</string>
+    <string name="confirm_body">Təsdiqlədikdə süni intellekt bu cavablara görə səyahətini gün-gün planlayır. Dəyişmək üçün sətrə toxun.</string>
     <string name="label_destination">Hara</string>
     <string name="label_days">Müddət</string>
     <string name="label_companions">Kiminlə</string>
@@ -78,6 +78,7 @@
     <string name="show_json">JSON-u göstər</string>
     <string name="hide_json">JSON-u gizlət</string>
     <string name="action_new_plan">Yeni plan</string>
+    <string name="action_share">Paylaş</string>
 
     <string name="error_title">Plan yaradıla bilmədi</string>
     <string name="error_api_key">Süni intellekt xidməti bu tətbiq üçün hələ qurulmayıb. Sonra yenidən cəhd et.</string>

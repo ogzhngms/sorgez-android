@@ -1,5 +1,7 @@
 package com.ogzhngms.sorgez.ui
 
+import android.content.Context
+import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -78,6 +80,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.ogzhngms.sorgez.AppSettings
+import com.ogzhngms.sorgez.BuildConfig
 import com.ogzhngms.sorgez.Budget
 import com.ogzhngms.sorgez.Companions
 import com.ogzhngms.sorgez.Currency
@@ -127,7 +130,7 @@ fun SorGezApp(vm: TripViewModel, onLanguageChange: (Language) -> Unit = {}) {
                         onBack = vm::back,
                     )
                     is Screen.Question -> QuestionScreen(screen.step, vm.answers, vm::update, vm::next, back)
-                    Screen.Confirm -> ConfirmScreen(vm.answers, currency, onPlan = vm::submit, onEdit = vm::back)
+                    Screen.Confirm -> ConfirmScreen(vm.answers, currency, onPlan = vm::submit, onEdit = vm::back, onEditStep = vm::edit)
                     Screen.Loading -> LoadingScreen(onCancel = vm::back)
                     is Screen.Result -> ResultScreen(screen, onNewPlan = vm::restart)
                     is Screen.Failed -> FailedScreen(screen, onRetry = vm::submit, onEdit = vm::back)
@@ -329,31 +332,35 @@ private fun <T> Choices(options: List<T>, selected: (T) -> Boolean, label: @Comp
 }
 
 @Composable
-private fun ConfirmScreen(answers: TripAnswers, currency: Currency, onPlan: () -> Unit, onEdit: () -> Unit) {
+private fun ConfirmScreen(answers: TripAnswers, currency: Currency, onPlan: () -> Unit, onEdit: () -> Unit, onEditStep: (Int) -> Unit) {
     var showPrompt by rememberSaveable { mutableStateOf(false) }
     Column(Modifier.fillMaxSize().padding(24.dp)) {
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Text(stringResource(R.string.confirm_title), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+            // Each row opens its question; Next there comes straight back here.
             Card(Modifier.fillMaxWidth()) {
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Summary(R.string.label_destination, answers.destination.trim())
-                    Summary(R.string.label_days, pluralStringResource(R.plurals.days, answers.days, answers.days))
-                    Summary(R.string.label_companions, stringResource(answers.companions.label))
-                    Summary(R.string.label_budget, stringResource(answers.budget.label))
+                Column(Modifier.padding(vertical = 6.dp)) {
+                    Summary(R.string.label_destination, answers.destination.trim()) { onEditStep(0) }
+                    Summary(R.string.label_days, pluralStringResource(R.plurals.days, answers.days, answers.days)) { onEditStep(1) }
+                    Summary(R.string.label_companions, stringResource(answers.companions.label)) { onEditStep(2) }
+                    Summary(R.string.label_budget, stringResource(answers.budget.label)) { onEditStep(3) }
                     Summary(
                         R.string.label_interests,
                         answers.interests.sorted().map { stringResource(it.label) }.joinToString()
                             .ifEmpty { stringResource(R.string.interests_none) },
-                    )
-                    if (answers.notes.isNotBlank()) Summary(R.string.label_notes, answers.notes.trim())
-                    Summary(R.string.label_pace, stringResource(answers.pace.label))
+                    ) { onEditStep(4) }
+                    if (answers.notes.isNotBlank()) Summary(R.string.label_notes, answers.notes.trim()) { onEditStep(4) }
+                    Summary(R.string.label_pace, stringResource(answers.pace.label)) { onEditStep(5) }
                 }
             }
             Text(stringResource(R.string.confirm_body), color = MaterialTheme.colorScheme.onSurfaceVariant)
-            TextButton(onClick = { showPrompt = !showPrompt }) {
-                Text(stringResource(if (showPrompt) R.string.hide_prompt else R.string.show_prompt))
+            // The prompt and the raw JSON are tools for the developer, so only debug builds offer them.
+            if (BuildConfig.DEBUG) {
+                TextButton(onClick = { showPrompt = !showPrompt }) {
+                    Text(stringResource(if (showPrompt) R.string.hide_prompt else R.string.show_prompt))
+                }
+                if (showPrompt) Code(buildPrompt(answers, promptLanguage(), currency))
             }
-            if (showPrompt) Code(buildPrompt(answers, promptLanguage(), currency))
         }
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             OutlinedButton(onClick = onEdit, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.action_edit)) }
@@ -363,10 +370,20 @@ private fun ConfirmScreen(answers: TripAnswers, currency: Currency, onPlan: () -
 }
 
 @Composable
-private fun Summary(@StringRes label: Int, value: String) {
-    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+private fun Summary(@StringRes label: Int, value: String, onClick: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().clickable(onClickLabel = stringResource(R.string.action_edit), onClick = onClick).padding(horizontal = 16.dp, vertical = 10.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         Text(stringResource(label), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.width(110.dp))
         Text(value, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
+        Icon(
+            painterResource(R.drawable.ic_edit),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+            modifier = Modifier.size(16.dp),
+        )
     }
 }
 
@@ -394,6 +411,7 @@ private fun LoadingScreen(onCancel: () -> Unit) {
 @Composable
 private fun ResultScreen(result: Screen.Result, onNewPlan: () -> Unit) {
     val itinerary = result.itinerary
+    val context = LocalContext.current
     var showJson by rememberSaveable { mutableStateOf(false) }
     LazyColumn(
         Modifier.fillMaxSize(),
@@ -420,7 +438,7 @@ private fun ResultScreen(result: Screen.Result, onNewPlan: () -> Unit) {
                 }
             }
         }
-        item {
+        if (BuildConfig.DEBUG) item {
             Column {
                 TextButton(onClick = { showJson = !showJson }) {
                     Text(stringResource(if (showJson) R.string.hide_json else R.string.show_json))
@@ -429,9 +447,37 @@ private fun ResultScreen(result: Screen.Result, onNewPlan: () -> Unit) {
             }
         }
         item {
-            Button(onClick = onNewPlan, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_new_plan)) }
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                OutlinedButton(onClick = { share(context, itinerary) }, modifier = Modifier.weight(1f)) {
+                    Icon(painterResource(R.drawable.ic_share), contentDescription = null, modifier = Modifier.size(18.dp))
+                    Spacer(Modifier.width(8.dp))
+                    Text(stringResource(R.string.action_share))
+                }
+                Button(onClick = onNewPlan, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.action_new_plan)) }
+            }
         }
     }
+}
+
+// The plan as plain text for the share sheet, laid out like the screen: title, budget, days, tips.
+private fun share(context: Context, itinerary: Itinerary) {
+    val text = buildString {
+        appendLine(itinerary.title)
+        appendLine(itinerary.summary)
+        appendLine(context.getString(R.string.budget_estimate, itinerary.estimatedBudget))
+        itinerary.days.forEach { day ->
+            appendLine()
+            appendLine(context.getString(R.string.day_title, day.day, day.title))
+            day.activities.forEach { appendLine("${it.time}  ${it.title} (${it.cost})") }
+        }
+        if (itinerary.tips.isNotEmpty()) {
+            appendLine()
+            appendLine(context.getString(R.string.tips_title))
+            itinerary.tips.forEach { appendLine("• $it") }
+        }
+    }.trim()
+    val send = Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_SUBJECT, itinerary.title).putExtra(Intent.EXTRA_TEXT, text)
+    context.startActivity(Intent.createChooser(send, context.getString(R.string.action_share)))
 }
 
 @Composable

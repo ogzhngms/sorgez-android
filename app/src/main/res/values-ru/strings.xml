@@ -56,7 +56,7 @@
     <string name="action_next">Далее</string>
 
     <string name="confirm_title">Готов планировать?</string>
-    <string name="confirm_body">Когда ты подтвердишь, ответы превратятся в промпт для ИИ, и он вернёт план в формате JSON.</string>
+    <string name="confirm_body">Когда ты подтвердишь, ИИ спланирует поездку по дням на основе этих ответов. Нажми на строку, чтобы изменить её.</string>
     <string name="label_destination">Куда</string>
     <string name="label_days">Длительность</string>
     <string name="label_companions">С кем</string>
@@ -80,6 +80,7 @@
     <string name="show_json">Показать JSON</string>
     <string name="hide_json">Скрыть JSON</string>
     <string name="action_new_plan">Новый план</string>
+    <string name="action_share">Поделиться</string>
 
     <string name="error_title">Не удалось создать план</string>
     <string name="error_api_key">Сервис ИИ для этого приложения ещё не настроен. Повторите попытку позже.</string>

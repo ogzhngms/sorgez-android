@@ -53,7 +53,7 @@
     <string name="action_next">Lanjut</string>
 
     <string name="confirm_title">Siap membuat rencana?</string>
-    <string name="confirm_body">Setelah kamu konfirmasi, jawabanmu menjadi prompt untuk AI, yang mengembalikan rencana dalam format JSON.</string>
+    <string name="confirm_body">Setelah kamu konfirmasi, AI merencanakan perjalananmu hari demi hari dari jawaban ini. Ketuk baris untuk mengubahnya.</string>
     <string name="label_destination">Tujuan</string>
     <string name="label_days">Durasi</string>
     <string name="label_companions">Dengan</string>
@@ -77,6 +77,7 @@
     <string name="show_json">Tampilkan JSON</string>
     <string name="hide_json">Sembunyikan JSON</string>
     <string name="action_new_plan">Rencana baru</string>
+    <string name="action_share">Bagikan</string>
 
     <string name="error_title">Rencana tidak dapat dibuat</string>
     <string name="error_api_key">Layanan AI belum disiapkan untuk aplikasi ini. Coba lagi nanti.</string>

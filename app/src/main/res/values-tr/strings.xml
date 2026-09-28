@@ -54,7 +54,7 @@
     <string name="action_next">İleri</string>
 
     <string name="confirm_title">Plan hazırlansın mı?</string>
-    <string name="confirm_body">Tamam dediğinde cevapların bir prompt\'a dönüşüp yapay zekâya gider. Yapay zekâ planı JSON olarak döndürür.</string>
+    <string name="confirm_body">Tamam dediğinde yapay zekâ bu cevaplara göre gezini gün gün planlar. Değiştirmek istediğin satıra dokun.</string>
     <string name="label_destination">Nereye</string>
     <string name="label_days">Süre</string>
     <string name="label_companions">Kiminle</string>
@@ -78,6 +78,7 @@
     <string name="show_json">JSON\'u göster</string>
     <string name="hide_json">JSON\'u gizle</string>
     <string name="action_new_plan">Yeni plan</string>
+    <string name="action_share">Paylaş</string>
 
     <string name="error_title">Plan oluşturulamadı</string>
     <string name="error_api_key">Yapay zekâ hizmeti bu uygulama için henüz hazır değil. Daha sonra tekrar dene.</string>

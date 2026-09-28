@@ -54,7 +54,7 @@
     <string name="action_next">Weiter</string>
 
     <string name="confirm_title">Bereit zum Planen?</string>
-    <string name="confirm_body">Wenn du bestätigst, werden deine Antworten zu einem Prompt für die KI, die den Plan als JSON zurückgibt.</string>
+    <string name="confirm_body">Wenn du bestätigst, plant die KI deine Reise anhand dieser Antworten Tag für Tag. Tippe auf eine Zeile, um sie zu ändern.</string>
     <string name="label_destination">Ziel</string>
     <string name="label_days">Dauer</string>
     <string name="label_companions">Mit</string>
@@ -78,6 +78,7 @@
     <string name="show_json">JSON anzeigen</string>
     <string name="hide_json">JSON ausblenden</string>
     <string name="action_new_plan">Neuer Plan</string>
+    <string name="action_share">Teilen</string>
 
     <string name="error_title">Der Plan konnte nicht erstellt werden</string>
     <string name="error_api_key">Der KI-Dienst ist für diese App noch nicht eingerichtet. Versuche es später erneut.</string>

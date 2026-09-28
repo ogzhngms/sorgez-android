@@ -56,7 +56,7 @@
     <string name="action_next">Next</string>
 
     <string name="confirm_title">Ready to plan?</string>
-    <string name="confirm_body">When you tap OK, your answers become a prompt for the AI, which replies with the plan as JSON.</string>
+    <string name="confirm_body">When you confirm, the AI plans your trip day by day from these answers. Tap a row to change it.</string>
     <string name="label_destination">Destination</string>
     <string name="label_days">Length</string>
     <string name="label_companions">With</string>
@@ -80,6 +80,7 @@
     <string name="show_json">Show JSON</string>
     <string name="hide_json">Hide JSON</string>
     <string name="action_new_plan">New plan</string>
+    <string name="action_share">Share</string>
 
     <string name="error_title">The plan could not be created</string>
     <string name="error_api_key">The AI service isn\'t set up for this app yet. Try again later.</string>

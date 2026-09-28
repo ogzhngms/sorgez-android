@@ -54,7 +54,7 @@
     <string name="action_next">आगे</string>
 
     <string name="confirm_title">योजना बनाने के लिए तैयार?</string>
-    <string name="confirm_body">पुष्टि करने पर आपके जवाब AI के लिए एक प्रॉम्प्ट बन जाते हैं, जो योजना JSON में लौटाता है।</string>
+    <string name="confirm_body">पुष्टि करने पर AI इन जवाबों के आधार पर आपकी यात्रा की दिन-ब-दिन योजना बनाता है। बदलने के लिए किसी पंक्ति पर टैप करें।</string>
     <string name="label_destination">गंतव्य</string>
     <string name="label_days">अवधि</string>
     <string name="label_companions">साथ में</string>
@@ -78,6 +78,7 @@
     <string name="show_json">JSON दिखाएँ</string>
     <string name="hide_json">JSON छिपाएँ</string>
     <string name="action_new_plan">नई योजना</string>
+    <string name="action_share">शेयर करें</string>
 
     <string name="error_title">योजना नहीं बन सकी</string>
     <string name="error_api_key">इस ऐप के लिए AI सेवा अभी सेट नहीं है। बाद में फिर कोशिश करें।</string>

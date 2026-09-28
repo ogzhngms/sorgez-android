@@ -56,6 +56,41 @@ class TripViewModelTest {
     }
 
     @Test
+    fun editingFromTheSummaryReturnsToIt() {
+        val vm = TripViewModel { sample }
+        vm.start()
+        vm.update { it.copy(destination = "Rome") }
+        repeat(QUESTIONS.size) { vm.next() }
+        assertEquals(Screen.Confirm, vm.screen)
+        vm.edit(0)
+        vm.update { it.copy(destination = "Ankara") }
+        vm.next()
+        assertEquals(Screen.Confirm, vm.screen)
+        vm.edit(3)
+        vm.back()
+        assertEquals(Screen.Confirm, vm.screen)
+        // Back from the summary still walks the questions as before.
+        vm.back()
+        assertEquals(Screen.Question(QUESTIONS.lastIndex), vm.screen)
+        vm.back()
+        assertEquals(Screen.Question(QUESTIONS.lastIndex - 1), vm.screen)
+        assertEquals("Ankara", vm.answers.destination)
+    }
+
+    @Test
+    fun aBlankDestinationCannotBeTakenBackToTheSummary() {
+        val vm = TripViewModel { sample }
+        vm.start()
+        vm.update { it.copy(destination = "Rome") }
+        repeat(QUESTIONS.size) { vm.next() }
+        vm.edit(0)
+        vm.update { it.copy(destination = " ") }
+        vm.back()
+        vm.next()
+        assertEquals(Screen.Question(0), vm.screen)
+    }
+
+    @Test
     fun newPlanClearsTheAnswersAndGoesHome() {
         val vm = TripViewModel { sample }
         vm.start()

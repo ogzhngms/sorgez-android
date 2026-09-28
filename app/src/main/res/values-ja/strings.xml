@@ -53,7 +53,7 @@
     <string name="action_next">次へ</string>
 
     <string name="confirm_title">プランを作成しますか？</string>
-    <string name="confirm_body">確定すると、回答が AI へのプロンプトになり、AI がプランを JSON で返します。</string>
+    <string name="confirm_body">確定すると、AI がこの回答をもとに旅行を1日ずつ計画します。変更したい行をタップしてください。</string>
     <string name="label_destination">行き先</string>
     <string name="label_days">期間</string>
     <string name="label_companions">同行者</string>
@@ -77,6 +77,7 @@
     <string name="show_json">JSON を表示</string>
     <string name="hide_json">JSON を隠す</string>
     <string name="action_new_plan">新しいプラン</string>
+    <string name="action_share">共有</string>
 
     <string name="error_title">プランを作成できませんでした</string>
     <string name="error_api_key">このアプリの AI サービスはまだ設定されていません。後でもう一度お試しください。</string>

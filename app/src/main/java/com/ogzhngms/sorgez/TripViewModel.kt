@@ -28,6 +28,10 @@ class TripViewModel(private val planner: suspend (TripAnswers) -> String) : View
         private set
     private var job: Job? = null
 
+    // Set while one answer is being changed from the summary: Next and Back both return to it.
+    var editing by mutableStateOf(false)
+        private set
+
     fun update(change: (TripAnswers) -> TripAnswers) {
         answers = change(answers)
     }
@@ -43,14 +47,25 @@ class TripViewModel(private val planner: suspend (TripAnswers) -> String) : View
     fun next() {
         val step = (screen as? Screen.Question)?.step ?: return
         if (step == 0 && answers.destination.isBlank()) return
-        screen = if (step < QUESTIONS.lastIndex) Screen.Question(step + 1) else Screen.Confirm
+        screen = if (step < QUESTIONS.lastIndex && !editing) Screen.Question(step + 1) else Screen.Confirm
+        editing = false
+    }
+
+    fun edit(step: Int) {
+        editing = true
+        screen = Screen.Question(step)
     }
 
     // Backing out of the first question to Home starts over, so Start always opens a blank trip.
     fun back() {
         screen = when (val current = screen) {
             Screen.Home, Screen.Profile -> Screen.Home
-            is Screen.Question -> if (current.step == 0) return restart() else Screen.Question(current.step - 1)
+            is Screen.Question -> when {
+                // The destination cannot be left blank on the way back.
+                editing -> if (current.step == 0 && answers.destination.isBlank()) return else Screen.Confirm.also { editing = false }
+                current.step == 0 -> return restart()
+                else -> Screen.Question(current.step - 1)
+            }
             Screen.Confirm -> Screen.Question(QUESTIONS.lastIndex)
             else -> {
                 job?.cancel()
@@ -76,6 +91,7 @@ class TripViewModel(private val planner: suspend (TripAnswers) -> String) : View
 
     fun restart() {
         answers = TripAnswers()
+        editing = false
         screen = Screen.Home
     }
 }

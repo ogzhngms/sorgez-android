@@ -55,7 +55,7 @@
     <string name="action_next">Siguiente</string>
 
     <string name="confirm_title">¿Listo para planificar?</string>
-    <string name="confirm_body">Cuando confirmes, tus respuestas se convierten en un prompt para la IA, que devuelve el plan en JSON.</string>
+    <string name="confirm_body">Cuando confirmes, la IA planificará tu viaje día a día con estas respuestas. Toca una fila para cambiarla.</string>
     <string name="label_destination">Destino</string>
     <string name="label_days">Duración</string>
     <string name="label_companions">Con</string>
@@ -79,6 +79,7 @@
     <string name="show_json">Ver JSON</string>
     <string name="hide_json">Ocultar JSON</string>
     <string name="action_new_plan">Nuevo plan</string>
+    <string name="action_share">Compartir</string>
 
     <string name="error_title">No se pudo crear el plan</string>
     <string name="error_api_key">El servicio de IA aún no está configurado para esta app. Inténtalo más tarde.</string>
