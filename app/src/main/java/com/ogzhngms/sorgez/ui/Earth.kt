@@ -11,7 +11,6 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
@@ -49,16 +48,19 @@ import kotlinx.coroutines.launch
 
 // NASA's Blue Marble imagery on a sphere whose centre faces the given latitude and longitude (radians),
 // lit from the upper left with a dark night side, a blue haze toward the rim and a thin rim of air.
+// Zoom grows the sphere under a round lens the size of the whole globe, with a soft edge, so a close-up
+// keeps the globe's outline.
 private const val EARTH_SHADER = """
 uniform float2 size;
 uniform float2 center;
 uniform shader surface;
 uniform float2 textureSize;
+uniform float zoom;
 
 const float PI = 3.14159265;
 
-half4 main(float2 coord) {
-    float radius = min(size.x, size.y) * 0.4;
+half4 sphere(float2 coord) {
+    float radius = min(size.x, size.y) * 0.4 * zoom;
     float2 p = (coord - size * 0.5) / radius;
     float d = length(p);
     float edge = 1.5 / radius;
@@ -81,12 +83,20 @@ half4 main(float2 coord) {
     half3 rgb = color * half(0.16 + 0.95 * light) + half3(0.30, 0.55, 1.0) * half(haze * 0.65);
     return mix(half4(rgb, 1.0), glow, half(smoothstep(1.0 - edge, 1.0 + edge, d)));
 }
+
+half4 main(float2 coord) {
+    float away = length(coord - size * 0.5) / min(size.x, size.y);
+    return sphere(coord) * half(smoothstep(0.47, 0.43, away));
+}
 """
 
 // Where the home-screen Earth starts: tilted so the north shows, Turkey facing the viewer.
 private const val HOME_LAT = 0.40f
 private const val HOME_LON = 0.61f
 private const val FULL_TURN = (2 * PI).toFloat()
+
+// How close the destination step comes in on a picked place: about a country's width across.
+private const val PLACE_ZOOM = 3f
 
 // The home-screen Earth, turning once a minute.
 @Composable
@@ -100,12 +110,17 @@ fun SpinningEarth(modifier: Modifier = Modifier) {
     Earth({ HOME_LAT }, { HOME_LON - turn * FULL_TURN }, modifier)
 }
 
-// The destination step's Earth: it turns slowly until the typed place is known, then flies there and drops a pin.
+// The destination step's Earth: it turns slowly until the typed place is known, then flies there, zooms in
+// and drops a pin. Choosing another place lifts the pin and zooms back out before flying on.
 @Composable
 fun DestinationEarth(place: Place?, modifier: Modifier = Modifier) {
     val lat = remember { Animatable(HOME_LAT) }
     val lon = remember { Animatable(HOME_LON) }
+    val zoom = remember { Animatable(1f) }
+    val pinDrop = remember { Animatable(0f) }
     LaunchedEffect(place) {
+        pinDrop.animateTo(0f, tween(150))
+        val zoomOut = launch { zoom.animateTo(1f, tween(600, easing = FastOutSlowInEasing)) }
         if (place == null) {
             launch { lat.animateTo(HOME_LAT, tween(1200)) }
             while (true) lon.animateTo(lon.value - FULL_TURN, tween(60_000, easing = LinearEasing))
@@ -115,13 +130,11 @@ fun DestinationEarth(place: Place?, modifier: Modifier = Modifier) {
             val nearest = targetLon + FULL_TURN * ((lon.value - targetLon) / FULL_TURN).roundToInt()
             launch { lat.animateTo(Math.toRadians(place.lat.toDouble()).toFloat(), tween(1200, easing = FastOutSlowInEasing)) }
             lon.animateTo(nearest, tween(1200, easing = FastOutSlowInEasing))
+            zoomOut.join()
+            zoom.animateTo(PLACE_ZOOM, tween(900, easing = FastOutSlowInEasing))
+            pinDrop.animateTo(1f, tween(450, easing = FastOutSlowInEasing))
         }
     }
-    val pin by animateFloatAsState(
-        if (place != null) 1f else 0f,
-        tween(if (place != null) 450 else 200, delayMillis = if (place != null) 1000 else 0, easing = FastOutSlowInEasing),
-        label = "pin",
-    )
     val ripple by rememberInfiniteTransition(label = "ripple").animateFloat(
         initialValue = 0f,
         targetValue = 1f,
@@ -130,10 +143,11 @@ fun DestinationEarth(place: Place?, modifier: Modifier = Modifier) {
     )
     val green = MaterialTheme.colorScheme.primary
     Box(modifier.aspectRatio(1f)) {
-        Earth({ lat.value }, { lon.value }, Modifier.fillMaxSize())
+        Earth({ lat.value }, { lon.value }, Modifier.fillMaxSize(), zoom = { zoom.value })
         // The globe centres on the place, so the pin lands at the centre: it drops in, and rings spread
         // from its tip, flattened as if lying on the ground.
         Canvas(Modifier.fillMaxSize()) {
+            val pin = pinDrop.value
             if (pin == 0f) return@Canvas
             for (offset in listOf(0f, 0.5f)) {
                 val t = (ripple + offset) % 1f
@@ -161,10 +175,10 @@ fun DestinationEarth(place: Place?, modifier: Modifier = Modifier) {
     }
 }
 
-// Android 13+ draws the photographic shader; older phones get a simple Canvas globe.
+// Android 13+ draws the photographic shader; older phones get a simple Canvas globe that does not zoom.
 @Composable
-private fun Earth(lat: () -> Float, lon: () -> Float, modifier: Modifier) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) ShaderEarth(lat, lon, modifier) else CanvasEarth(lon, modifier)
+private fun Earth(lat: () -> Float, lon: () -> Float, modifier: Modifier, zoom: () -> Float = { 1f }) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) ShaderEarth(lat, lon, zoom, modifier) else CanvasEarth(lon, modifier)
 }
 
 // Decoded once per process.
@@ -172,7 +186,7 @@ private var texture: Bitmap? = null
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-private fun ShaderEarth(lat: () -> Float, lon: () -> Float, modifier: Modifier) {
+private fun ShaderEarth(lat: () -> Float, lon: () -> Float, zoom: () -> Float, modifier: Modifier) {
     val resources = LocalContext.current.resources
     val shader = remember {
         RuntimeShader(EARTH_SHADER).apply {
@@ -188,6 +202,7 @@ private fun ShaderEarth(lat: () -> Float, lon: () -> Float, modifier: Modifier) 
         modifier.aspectRatio(1f).drawBehind {
             shader.setFloatUniform("size", size.width, size.height)
             shader.setFloatUniform("center", lat(), lon())
+            shader.setFloatUniform("zoom", zoom())
             drawRect(brush)
         },
     )
