@@ -21,7 +21,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -44,7 +43,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -187,7 +185,7 @@ private fun QuestionScreen(
                     onUpdate { it.copy(budget = choice) }
                 }
                 4 -> {
-                    Choices(Interest.entries, { it in answers.interests }, { stringResource(it.label) }) { choice ->
+                    IconChoices(Interest.entries, { it in answers.interests }, { it.label }, { it.icon }, compact = true) { choice ->
                         onUpdate { it.copy(interests = if (choice in it.interests) it.interests - choice else it.interests + choice) }
                     }
                     Spacer(Modifier.height(20.dp))
@@ -198,7 +196,7 @@ private fun QuestionScreen(
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
-                5 -> Choices(Pace.entries, { it == answers.pace }, { stringResource(it.label) }) { choice ->
+                5 -> IconChoices(Pace.entries, { it == answers.pace }, { it.label }, { it.icon }, columns = 3) { choice ->
                     onUpdate { it.copy(pace = choice) }
                 }
             }
@@ -273,6 +271,7 @@ private fun DestinationStep(destination: String, onChange: (String) -> Unit, onN
 }
 
 // Large tiles, two to a row unless told otherwise, each an icon over its label; the chosen one is outlined and tinted green.
+// Compact tiles put the icon beside the label, for longer lists.
 @Composable
 private fun <T> IconChoices(
     options: List<T>,
@@ -280,6 +279,7 @@ private fun <T> IconChoices(
     @StringRes label: (T) -> Int,
     @DrawableRes icon: (T) -> Int,
     columns: Int = 2,
+    compact: Boolean = false,
     onClick: (T) -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -290,43 +290,42 @@ private fun <T> IconChoices(
                     val colors = MaterialTheme.colorScheme
                     OutlinedCard(
                         onClick = { onClick(option) },
-                        modifier = Modifier.weight(1f).height(128.dp).semantics { this.selected = chosen },
+                        modifier = Modifier.weight(1f).height(if (compact) 60.dp else 128.dp).semantics { this.selected = chosen },
                         colors = CardDefaults.outlinedCardColors(
                             containerColor = if (chosen) colors.primary.copy(alpha = 0.14f) else colors.surface,
                         ),
                         border = BorderStroke(if (chosen) 2.dp else 1.dp, if (chosen) colors.primary else colors.outlineVariant),
                     ) {
-                        Column(
-                            Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically),
-                        ) {
-                            val tint = if (chosen) colors.primary else colors.onSurfaceVariant
-                            Icon(painterResource(icon(option)), contentDescription = null, tint = tint, modifier = Modifier.size(40.dp))
+                        val tint = if (chosen) colors.primary else colors.onSurfaceVariant
+                        val text = @Composable {
                             Text(
                                 stringResource(label(option)),
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = if (chosen) FontWeight.Bold else FontWeight.Medium,
                                 color = if (chosen) colors.primary else colors.onSurface,
+                                textAlign = TextAlign.Center,
                             )
+                        }
+                        if (compact) {
+                            Row(Modifier.fillMaxSize().padding(horizontal = 14.dp), verticalAlignment = Alignment.CenterVertically) {
+                                Icon(painterResource(icon(option)), contentDescription = null, tint = tint, modifier = Modifier.size(24.dp))
+                                Spacer(Modifier.width(12.dp))
+                                text()
+                            }
+                        } else {
+                            Column(
+                                Modifier.fillMaxSize().padding(horizontal = 8.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically),
+                            ) {
+                                Icon(painterResource(icon(option)), contentDescription = null, tint = tint, modifier = Modifier.size(40.dp))
+                                text()
+                            }
                         }
                     }
                 }
                 repeat(columns - row.size) { Spacer(Modifier.weight(1f)) }
             }
-        }
-    }
-}
-
-@Composable
-private fun <T> Choices(options: List<T>, selected: (T) -> Boolean, label: @Composable (T) -> String, onClick: (T) -> Unit) {
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        options.forEach { option ->
-            FilterChip(
-                selected = selected(option),
-                onClick = { onClick(option) },
-                label = { Text(label(option)) },
-            )
         }
     }
 }

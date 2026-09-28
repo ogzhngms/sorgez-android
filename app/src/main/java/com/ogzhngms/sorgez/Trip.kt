@@ -29,21 +29,21 @@ enum class Budget(@StringRes val label: Int, val prompt: String, @DrawableRes va
     HIGH(R.string.budget_high, "luxury", R.drawable.ic_money_high),
 }
 
-enum class Interest(@StringRes val label: Int, val prompt: String) {
-    CULTURE(R.string.interest_culture, "history and culture"),
-    FOOD(R.string.interest_food, "food and drink"),
-    NATURE(R.string.interest_nature, "nature"),
-    ART(R.string.interest_art, "museums and art"),
-    SHOPPING(R.string.interest_shopping, "shopping"),
-    NIGHTLIFE(R.string.interest_nightlife, "nightlife"),
-    BEACH(R.string.interest_beach, "beaches"),
-    ADVENTURE(R.string.interest_adventure, "adventure"),
+enum class Interest(@StringRes val label: Int, val prompt: String, @DrawableRes val icon: Int) {
+    CULTURE(R.string.interest_culture, "history and culture", R.drawable.ic_culture),
+    FOOD(R.string.interest_food, "food and drink", R.drawable.ic_food),
+    NATURE(R.string.interest_nature, "nature", R.drawable.ic_nature),
+    ART(R.string.interest_art, "museums and art", R.drawable.ic_art),
+    SHOPPING(R.string.interest_shopping, "shopping", R.drawable.ic_shopping),
+    NIGHTLIFE(R.string.interest_nightlife, "nightlife", R.drawable.ic_nightlife),
+    BEACH(R.string.interest_beach, "beaches", R.drawable.ic_beach),
+    ADVENTURE(R.string.interest_adventure, "adventure", R.drawable.ic_adventure),
 }
 
-enum class Pace(@StringRes val label: Int, val prompt: String) {
-    RELAXED(R.string.pace_relaxed, "relaxed, two or three activities a day"),
-    BALANCED(R.string.pace_balanced, "balanced, four or five activities a day"),
-    PACKED(R.string.pace_packed, "packed, six or more activities a day"),
+enum class Pace(@StringRes val label: Int, val prompt: String, @DrawableRes val icon: Int) {
+    RELAXED(R.string.pace_relaxed, "relaxed, two or three activities a day", R.drawable.ic_pace_relaxed),
+    BALANCED(R.string.pace_balanced, "balanced, four or five activities a day", R.drawable.ic_pace_balanced),
+    PACKED(R.string.pace_packed, "packed, six or more activities a day", R.drawable.ic_pace_packed),
 }
 
 data class TripAnswers(
