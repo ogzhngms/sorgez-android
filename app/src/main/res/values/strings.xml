@@ -47,10 +47,6 @@
     <string name="interest_beach">Beaches</string>
     <string name="interest_adventure">Adventure</string>
     <string name="hint_notes">Anything else? (optional)</string>
-    <string name="q_pace">What pace do you like?</string>
-    <string name="pace_relaxed">Relaxed</string>
-    <string name="pace_balanced">Balanced</string>
-    <string name="pace_packed">Packed</string>
     <string name="action_back">Back</string>
     <string name="action_next">Next</string>
 
@@ -61,7 +57,6 @@
     <string name="label_budget">Budget</string>
     <string name="label_interests">Interests</string>
     <string name="label_notes">Notes</string>
-    <string name="label_pace">Pace</string>
     <string name="interests_none">No preference</string>
     <string name="action_edit">Edit</string>
     <string name="action_plan">OK, plan it</string>

@@ -44,10 +44,6 @@
     <string name="interest_beach">해변</string>
     <string name="interest_adventure">모험</string>
     <string name="hint_notes">그 밖에 원하는 게 있나요? (선택)</string>
-    <string name="q_pace">어떤 속도가 좋나요?</string>
-    <string name="pace_relaxed">여유롭게</string>
-    <string name="pace_balanced">적당히</string>
-    <string name="pace_packed">빡빡하게</string>
     <string name="action_back">뒤로</string>
     <string name="action_next">다음</string>
 
@@ -58,7 +54,6 @@
     <string name="label_budget">예산</string>
     <string name="label_interests">관심사</string>
     <string name="label_notes">메모</string>
-    <string name="label_pace">속도</string>
     <string name="interests_none">상관없음</string>
     <string name="action_edit">수정</string>
     <string name="action_plan">좋아요, 계획하기</string>

@@ -47,10 +47,6 @@
     <string name="interest_beach">Пляжи</string>
     <string name="interest_adventure">Приключения</string>
     <string name="hint_notes">Что-нибудь ещё? (необязательно)</string>
-    <string name="q_pace">Какой темп тебе по душе?</string>
-    <string name="pace_relaxed">Спокойный</string>
-    <string name="pace_balanced">Сбалансированный</string>
-    <string name="pace_packed">Насыщенный</string>
     <string name="action_back">Назад</string>
     <string name="action_next">Далее</string>
 
@@ -61,7 +57,6 @@
     <string name="label_budget">Бюджет</string>
     <string name="label_interests">Интересы</string>
     <string name="label_notes">Заметки</string>
-    <string name="label_pace">Темп</string>
     <string name="interests_none">Без предпочтений</string>
     <string name="action_edit">Изменить</string>
     <string name="action_plan">ОК, спланировать</string>

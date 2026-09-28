@@ -46,10 +46,6 @@
     <string name="interest_beach">Spiagge</string>
     <string name="interest_adventure">Avventura</string>
     <string name="hint_notes">Altro? (facoltativo)</string>
-    <string name="q_pace">Che ritmo preferisci?</string>
-    <string name="pace_relaxed">Rilassato</string>
-    <string name="pace_balanced">Equilibrato</string>
-    <string name="pace_packed">Intenso</string>
     <string name="action_back">Indietro</string>
     <string name="action_next">Avanti</string>
 
@@ -60,7 +56,6 @@
     <string name="label_budget">Budget</string>
     <string name="label_interests">Interessi</string>
     <string name="label_notes">Note</string>
-    <string name="label_pace">Ritmo</string>
     <string name="interests_none">Nessuna preferenza</string>
     <string name="action_edit">Modifica</string>
     <string name="action_plan">OK, pianifica</string>

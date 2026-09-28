@@ -45,10 +45,6 @@
     <string name="interest_beach">Plaj</string>
     <string name="interest_adventure">Macera</string>
     <string name="hint_notes">Başka bir isteğin var mı? (isteğe bağlı)</string>
-    <string name="q_pace">Nasıl bir tempo istersin?</string>
-    <string name="pace_relaxed">Sakin</string>
-    <string name="pace_balanced">Dengeli</string>
-    <string name="pace_packed">Yoğun</string>
     <string name="action_back">Geri</string>
     <string name="action_next">İleri</string>
 
@@ -59,7 +55,6 @@
     <string name="label_budget">Bütçe</string>
     <string name="label_interests">İlgi alanları</string>
     <string name="label_notes">Notlar</string>
-    <string name="label_pace">Tempo</string>
     <string name="interests_none">Fark etmez</string>
     <string name="action_edit">Düzenle</string>
     <string name="action_plan">Tamam, planla</string>

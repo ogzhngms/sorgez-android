@@ -44,10 +44,6 @@
     <string name="interest_beach">海滩</string>
     <string name="interest_adventure">探险</string>
     <string name="hint_notes">还有其他要求吗？（可选）</string>
-    <string name="q_pace">你喜欢什么节奏？</string>
-    <string name="pace_relaxed">轻松</string>
-    <string name="pace_balanced">适中</string>
-    <string name="pace_packed">紧凑</string>
     <string name="action_back">上一步</string>
     <string name="action_next">下一步</string>
 
@@ -58,7 +54,6 @@
     <string name="label_budget">预算</string>
     <string name="label_interests">兴趣</string>
     <string name="label_notes">备注</string>
-    <string name="label_pace">节奏</string>
     <string name="interests_none">无偏好</string>
     <string name="action_edit">修改</string>
     <string name="action_plan">好的，开始规划</string>

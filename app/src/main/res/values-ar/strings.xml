@@ -49,10 +49,6 @@
     <string name="interest_beach">الشواطئ</string>
     <string name="interest_adventure">المغامرة</string>
     <string name="hint_notes">هل هناك شيء آخر؟ (اختياري)</string>
-    <string name="q_pace">ما الإيقاع الذي تفضّله؟</string>
-    <string name="pace_relaxed">هادئ</string>
-    <string name="pace_balanced">متوازن</string>
-    <string name="pace_packed">مكثّف</string>
     <string name="action_back">رجوع</string>
     <string name="action_next">التالي</string>
 
@@ -63,7 +59,6 @@
     <string name="label_budget">الميزانية</string>
     <string name="label_interests">الاهتمامات</string>
     <string name="label_notes">ملاحظات</string>
-    <string name="label_pace">الإيقاع</string>
     <string name="interests_none">لا تفضيل</string>
     <string name="action_edit">تعديل</string>
     <string name="action_plan">حسنًا، خطّط</string>

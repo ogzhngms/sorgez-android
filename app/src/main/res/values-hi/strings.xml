@@ -45,10 +45,6 @@
     <string name="interest_beach">समुद्र तट</string>
     <string name="interest_adventure">रोमांच</string>
     <string name="hint_notes">कुछ और? (वैकल्पिक)</string>
-    <string name="q_pace">आपको कैसी रफ़्तार पसंद है?</string>
-    <string name="pace_relaxed">आरामदायक</string>
-    <string name="pace_balanced">संतुलित</string>
-    <string name="pace_packed">व्यस्त</string>
     <string name="action_back">वापस</string>
     <string name="action_next">आगे</string>
 
@@ -59,7 +55,6 @@
     <string name="label_budget">बजट</string>
     <string name="label_interests">रुचियाँ</string>
     <string name="label_notes">नोट्स</string>
-    <string name="label_pace">रफ़्तार</string>
     <string name="interests_none">कोई पसंद नहीं</string>
     <string name="action_edit">बदलें</string>
     <string name="action_plan">ठीक है, योजना बनाएँ</string>

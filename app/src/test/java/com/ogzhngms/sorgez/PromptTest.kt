@@ -15,7 +15,6 @@ class PromptTest {
             budget = Budget.LOW,
             interests = setOf(Interest.NIGHTLIFE, Interest.FOOD),
             notes = "No museums",
-            pace = Pace.PACKED,
         )
         assertEquals(
             """
@@ -25,7 +24,7 @@ class PromptTest {
             Budget: low, keep costs down
             Currency: EUR
             Interests: food and drink, nightlife
-            Pace: packed, six or more activities a day
+            Pace: balanced, four or five activities a day, unless the other wishes ask for something else
             Other wishes: No museums
             Write every text value in Turkish.
             """.trimIndent(),

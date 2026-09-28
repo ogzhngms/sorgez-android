@@ -11,7 +11,6 @@ val QUESTIONS = listOf(
     R.string.q_companions,
     R.string.q_budget,
     R.string.q_interests,
-    R.string.q_pace,
 )
 
 const val MAX_DAYS = 14
@@ -40,12 +39,6 @@ enum class Interest(@StringRes val label: Int, val prompt: String, @DrawableRes 
     ADVENTURE(R.string.interest_adventure, "adventure", R.drawable.ic_adventure),
 }
 
-enum class Pace(@StringRes val label: Int, val prompt: String, @DrawableRes val icon: Int) {
-    RELAXED(R.string.pace_relaxed, "relaxed, two or three activities a day", R.drawable.ic_pace_relaxed),
-    BALANCED(R.string.pace_balanced, "balanced, four or five activities a day", R.drawable.ic_pace_balanced),
-    PACKED(R.string.pace_packed, "packed, six or more activities a day", R.drawable.ic_pace_packed),
-}
-
 data class TripAnswers(
     val destination: String = "",
     val days: Int = 3,
@@ -53,7 +46,6 @@ data class TripAnswers(
     val budget: Budget = Budget.MEDIUM,
     val interests: Set<Interest> = emptySet(),
     val notes: String = "",
-    val pace: Pace = Pace.BALANCED,
 )
 
 const val SYSTEM_PROMPT =
@@ -68,7 +60,8 @@ fun buildPrompt(answers: TripAnswers, language: String, currency: Currency = Cur
     appendLine("Budget: ${answers.budget.prompt}")
     appendLine("Currency: ${currency.name}")
     appendLine("Interests: " + answers.interests.sorted().joinToString { it.prompt }.ifEmpty { "no preference" })
-    appendLine("Pace: ${answers.pace.prompt}")
+    // There is no pace question: a balanced day suits most trips, and the notes can ask for calmer or fuller days.
+    appendLine("Pace: balanced, four or five activities a day, unless the other wishes ask for something else")
     if (answers.notes.isNotBlank()) appendLine("Other wishes: ${answers.notes.trim()}")
     append("Write every text value in $language.")
 }

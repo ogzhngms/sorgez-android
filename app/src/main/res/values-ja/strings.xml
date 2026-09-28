@@ -44,10 +44,6 @@
     <string name="interest_beach">ビーチ</string>
     <string name="interest_adventure">アドベンチャー</string>
     <string name="hint_notes">ほかに希望はありますか？（任意）</string>
-    <string name="q_pace">どんなペースが好きですか？</string>
-    <string name="pace_relaxed">ゆったり</string>
-    <string name="pace_balanced">ほどほど</string>
-    <string name="pace_packed">ぎっしり</string>
     <string name="action_back">戻る</string>
     <string name="action_next">次へ</string>
 
@@ -58,7 +54,6 @@
     <string name="label_budget">予算</string>
     <string name="label_interests">興味</string>
     <string name="label_notes">メモ</string>
-    <string name="label_pace">ペース</string>
     <string name="interests_none">こだわりなし</string>
     <string name="action_edit">編集</string>
     <string name="action_plan">OK、作成する</string>

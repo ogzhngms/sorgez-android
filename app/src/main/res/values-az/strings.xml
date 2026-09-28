@@ -45,10 +45,6 @@
     <string name="interest_beach">Çimərlik</string>
     <string name="interest_adventure">Macəra</string>
     <string name="hint_notes">Başqa istəyin var? (məcburi deyil)</string>
-    <string name="q_pace">Necə bir temp istəyirsən?</string>
-    <string name="pace_relaxed">Sakit</string>
-    <string name="pace_balanced">Balanslı</string>
-    <string name="pace_packed">Sıx</string>
     <string name="action_back">Geri</string>
     <string name="action_next">İrəli</string>
 
@@ -59,7 +55,6 @@
     <string name="label_budget">Büdcə</string>
     <string name="label_interests">Maraqlar</string>
     <string name="label_notes">Qeydlər</string>
-    <string name="label_pace">Temp</string>
     <string name="interests_none">Fərqi yoxdur</string>
     <string name="action_edit">Redaktə et</string>
     <string name="action_plan">Bəli, planla</string>

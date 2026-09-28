@@ -90,7 +90,6 @@ import com.ogzhngms.sorgez.Interest
 import com.ogzhngms.sorgez.Itinerary
 import com.ogzhngms.sorgez.Language
 import com.ogzhngms.sorgez.MAX_DAYS
-import com.ogzhngms.sorgez.Pace
 import com.ogzhngms.sorgez.QUESTIONS
 import com.ogzhngms.sorgez.R
 import com.ogzhngms.sorgez.Screen
@@ -196,9 +195,6 @@ private fun QuestionScreen(
                         label = { Text(stringResource(R.string.hint_notes)) },
                         modifier = Modifier.fillMaxWidth(),
                     )
-                }
-                5 -> IconChoices(Pace.entries, { it == answers.pace }, { it.label }, { it.icon }, columns = 3) { choice ->
-                    onUpdate { it.copy(pace = choice) }
                 }
             }
         }
@@ -350,12 +346,11 @@ private fun ConfirmScreen(answers: TripAnswers, onPlan: () -> Unit, onEdit: () -
                             .ifEmpty { stringResource(R.string.interests_none) },
                     ) { onEditStep(4) }
                     if (answers.notes.isNotBlank()) Summary(R.string.label_notes, answers.notes.trim()) { onEditStep(4) }
-                    Summary(R.string.label_pace, stringResource(answers.pace.label)) { onEditStep(5) }
                 }
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            OutlinedButton(onClick = onEdit, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.action_edit)) }
+            OutlinedButton(onClick = onEdit, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.action_back)) }
             Button(onClick = onPlan, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.action_plan)) }
         }
     }
