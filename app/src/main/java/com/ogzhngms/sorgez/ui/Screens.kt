@@ -41,7 +41,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -129,7 +128,7 @@ fun SorGezApp(vm: TripViewModel, onLanguageChange: (Language) -> Unit = {}) {
                     )
                     is Screen.Question -> QuestionScreen(screen.step, vm.answers, vm::update, vm::next, back)
                     Screen.Confirm -> ConfirmScreen(vm.answers, currency, onPlan = vm::submit, onEdit = vm::back, onEditStep = vm::edit)
-                    Screen.Loading -> LoadingScreen(onCancel = vm::back)
+                    Screen.Loading -> LoadingScreen(vm.answers.destination, onCancel = vm::back)
                     is Screen.Result -> ResultScreen(screen, onNewPlan = vm::restart)
                     is Screen.Failed -> FailedScreen(screen, onRetry = vm::submit, onEdit = vm::back)
                 }
@@ -387,13 +386,16 @@ private fun Summary(@StringRes label: Int, value: String, onClick: () -> Unit) {
 }
 
 @Composable
-private fun LoadingScreen(onCancel: () -> Unit) {
+// While the plan is written, the Earth flies to the destination and zooms in, as on the first question.
+private fun LoadingScreen(destination: String, onCancel: () -> Unit) {
+    val place = remember(destination) { findPlace(destination) }
     Column(
         Modifier.fillMaxSize().padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        CircularProgressIndicator()
+        DestinationEarth(place, Modifier.fillMaxWidth(0.8f))
+        LinearProgressIndicator(Modifier.fillMaxWidth(0.5f))
         Spacer(Modifier.height(24.dp))
         Text(stringResource(R.string.loading_title), style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
         Spacer(Modifier.height(8.dp))
