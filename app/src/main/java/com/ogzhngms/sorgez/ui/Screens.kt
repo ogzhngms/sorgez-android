@@ -22,7 +22,10 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.snapping.SnapPosition
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +43,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -58,11 +63,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -84,8 +93,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.ogzhngms.sorgez.AppSettings
-import com.ogzhngms.sorgez.BuildConfig
 import com.ogzhngms.sorgez.Budget
+import com.ogzhngms.sorgez.BuildConfig
 import com.ogzhngms.sorgez.Companions
 import com.ogzhngms.sorgez.Day
 import com.ogzhngms.sorgez.Interest
@@ -103,6 +112,9 @@ import com.ogzhngms.sorgez.suggestPlaces
 import java.time.Month
 import java.time.format.TextStyle
 import java.util.Locale
+import kotlin.math.abs
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 @Composable
@@ -286,25 +298,55 @@ private fun DayTiles(days: Int, onPick: (Int) -> Unit) {
     }
 }
 
-// "Not sure yet" across the top, then all twelve months, three to a row, so none hides off screen.
+// An iOS-style wheel: "Not sure yet", then January to December; whatever settles in the middle band is picked.
+// A tap on a row turns the wheel to it.
 @Composable
 private fun MonthPicker(month: Int?, onPick: (Int?) -> Unit) {
     val locale = Locale.getDefault()
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        SelectTile(month == null, { onPick(null) }, Modifier.fillMaxWidth().height(44.dp)) { color ->
-            Text(stringResource(R.string.when_unknown), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Medium, color = color)
+    val options = remember { listOf<Int?>(null) + (1..12) }
+    val state = rememberLazyListState(initialFirstVisibleItemIndex = options.indexOf(month).coerceAtLeast(0))
+    val scope = rememberCoroutineScope()
+    val centred by remember {
+        derivedStateOf {
+            val info = state.layoutInfo
+            val middle = (info.viewportStartOffset + info.viewportEndOffset) / 2
+            info.visibleItemsInfo.minByOrNull { abs(it.offset + it.size / 2 - middle) }?.index ?: 0
         }
-        (1..12).chunked(3).forEach { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                row.forEach { option ->
-                    SelectTile(option == month, { onPick(option) }, Modifier.weight(1f).height(44.dp)) { color ->
-                        Text(monthName(option, locale), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Medium, color = color)
-                    }
+    }
+    LaunchedEffect(state) {
+        snapshotFlow { state.isScrollInProgress to centred }
+            .filter { (scrolling, _) -> !scrolling }
+            .collect { (_, index) -> if (options[index] != month) onPick(options[index]) }
+    }
+    val colors = MaterialTheme.colorScheme
+    Box(Modifier.fillMaxWidth().height(WHEEL_ROW * WHEEL_ROWS), contentAlignment = Alignment.Center) {
+        Box(Modifier.fillMaxWidth().height(WHEEL_ROW).background(colors.primary.copy(alpha = 0.14f), MaterialTheme.shapes.medium))
+        LazyColumn(
+            state = state,
+            flingBehavior = rememberSnapFlingBehavior(state, SnapPosition.Center),
+            contentPadding = PaddingValues(vertical = WHEEL_ROW * (WHEEL_ROWS / 2)),
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            itemsIndexed(options) { index, option ->
+                val distance = abs(index - centred)
+                Box(
+                    Modifier.fillMaxWidth().height(WHEEL_ROW).clickable { scope.launch { state.animateScrollToItem(index) } },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        option?.let { monthName(it, locale) } ?: stringResource(R.string.when_unknown),
+                        style = if (distance == 0) MaterialTheme.typography.titleMedium else MaterialTheme.typography.bodyLarge,
+                        fontWeight = if (distance == 0) FontWeight.Bold else FontWeight.Normal,
+                        color = if (distance == 0) colors.primary else colors.onSurfaceVariant.copy(alpha = if (distance == 1) 0.7f else 0.35f),
+                    )
                 }
             }
         }
     }
 }
+
+private val WHEEL_ROW = 40.dp
+private const val WHEEL_ROWS = 5
 
 internal fun monthName(month: Int, locale: Locale): String =
     Month.of(month).getDisplayName(TextStyle.FULL_STANDALONE, locale).replaceFirstChar { it.titlecase(locale) }
