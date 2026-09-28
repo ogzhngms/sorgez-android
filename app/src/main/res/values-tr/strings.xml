@@ -53,7 +53,6 @@
     <string name="action_next">İleri</string>
 
     <string name="confirm_title">Plan hazırlansın mı?</string>
-    <string name="confirm_body">Tamam dediğinde yapay zekâ bu cevaplara göre gezini gün gün planlar. Değiştirmek istediğin satıra dokun.</string>
     <string name="label_destination">Nereye</string>
     <string name="label_days">Süre</string>
     <string name="label_companions">Kiminle</string>
@@ -62,13 +61,14 @@
     <string name="label_notes">Notlar</string>
     <string name="label_pace">Tempo</string>
     <string name="interests_none">Fark etmez</string>
-    <string name="show_prompt">Prompt\'u göster</string>
-    <string name="hide_prompt">Prompt\'u gizle</string>
     <string name="action_edit">Düzenle</string>
     <string name="action_plan">Tamam, planla</string>
 
-    <string name="loading_title">Planın yazılıyor…</string>
-    <string name="loading_body">Yapay zekâ gezini planlıyor. Bu genelde yarım dakika sürer, modeller yoğunsa biraz daha uzun.</string>
+    <string name="loading_title">Gezin hazırlanıyor</string>
+    <string name="loading_step_1">Rotan çiziliyor…</string>
+    <string name="loading_step_2">Görülecek yerler seçiliyor…</string>
+    <string name="loading_step_3">Günlerin düzenleniyor…</string>
+    <string name="loading_step_4">Bütçe hesaplanıyor…</string>
     <string name="action_cancel">Vazgeç</string>
 
     <string name="budget_estimate">Tahmini bütçe: %1$s</string>

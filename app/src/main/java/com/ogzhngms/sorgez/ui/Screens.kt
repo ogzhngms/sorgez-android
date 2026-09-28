@@ -8,6 +8,11 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -80,7 +85,6 @@ import com.ogzhngms.sorgez.AppSettings
 import com.ogzhngms.sorgez.BuildConfig
 import com.ogzhngms.sorgez.Budget
 import com.ogzhngms.sorgez.Companions
-import com.ogzhngms.sorgez.Currency
 import com.ogzhngms.sorgez.Day
 import com.ogzhngms.sorgez.Interest
 import com.ogzhngms.sorgez.Itinerary
@@ -92,10 +96,8 @@ import com.ogzhngms.sorgez.R
 import com.ogzhngms.sorgez.Screen
 import com.ogzhngms.sorgez.TripAnswers
 import com.ogzhngms.sorgez.TripViewModel
-import com.ogzhngms.sorgez.buildPrompt
 import com.ogzhngms.sorgez.findPlace
 import com.ogzhngms.sorgez.normalize
-import com.ogzhngms.sorgez.promptLanguage
 import com.ogzhngms.sorgez.suggestPlaces
 import java.util.Locale
 import org.json.JSONObject
@@ -127,7 +129,7 @@ fun SorGezApp(vm: TripViewModel, onLanguageChange: (Language) -> Unit = {}) {
                         onBack = vm::back,
                     )
                     is Screen.Question -> QuestionScreen(screen.step, vm.answers, vm::update, vm::next, back)
-                    Screen.Confirm -> ConfirmScreen(vm.answers, currency, onPlan = vm::submit, onEdit = vm::back, onEditStep = vm::edit)
+                    Screen.Confirm -> ConfirmScreen(vm.answers, onPlan = vm::submit, onEdit = vm::back, onEditStep = vm::edit)
                     Screen.Loading -> LoadingScreen(vm.answers.destination, onCancel = vm::back)
                     is Screen.Result -> ResultScreen(screen, onNewPlan = vm::restart)
                     is Screen.Failed -> FailedScreen(screen, onRetry = vm::submit, onEdit = vm::back)
@@ -330,8 +332,8 @@ private fun <T> IconChoices(
 }
 
 @Composable
-private fun ConfirmScreen(answers: TripAnswers, currency: Currency, onPlan: () -> Unit, onEdit: () -> Unit, onEditStep: (Int) -> Unit) {
-    var showPrompt by rememberSaveable { mutableStateOf(false) }
+// The space under the summary is left free on purpose: it is kept for an ad.
+private fun ConfirmScreen(answers: TripAnswers, onPlan: () -> Unit, onEdit: () -> Unit, onEditStep: (Int) -> Unit) {
     Column(Modifier.fillMaxSize().padding(24.dp)) {
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Text(stringResource(R.string.confirm_title), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
@@ -350,14 +352,6 @@ private fun ConfirmScreen(answers: TripAnswers, currency: Currency, onPlan: () -
                     if (answers.notes.isNotBlank()) Summary(R.string.label_notes, answers.notes.trim()) { onEditStep(4) }
                     Summary(R.string.label_pace, stringResource(answers.pace.label)) { onEditStep(5) }
                 }
-            }
-            Text(stringResource(R.string.confirm_body), color = MaterialTheme.colorScheme.onSurfaceVariant)
-            // The prompt and the raw JSON are tools for the developer, so only debug builds offer them.
-            if (BuildConfig.DEBUG) {
-                TextButton(onClick = { showPrompt = !showPrompt }) {
-                    Text(stringResource(if (showPrompt) R.string.hide_prompt else R.string.show_prompt))
-                }
-                if (showPrompt) Code(buildPrompt(answers, promptLanguage(), currency))
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -397,17 +391,34 @@ private fun LoadingScreen(destination: String, onCancel: () -> Unit) {
         DestinationEarth(place, Modifier.fillMaxWidth(0.8f))
         LinearProgressIndicator(Modifier.fillMaxWidth(0.5f))
         Spacer(Modifier.height(24.dp))
-        Text(stringResource(R.string.loading_title), style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
-        Spacer(Modifier.height(8.dp))
         Text(
-            stringResource(R.string.loading_body),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            stringResource(R.string.loading_title),
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center,
         )
+        Spacer(Modifier.height(8.dp))
+        // What is being worked on, a new line every few seconds; an infinite transition so UI tests can settle.
+        val step by rememberInfiniteTransition(label = "steps").animateFloat(
+            initialValue = 0f,
+            targetValue = LOADING_STEPS.size.toFloat(),
+            animationSpec = infiniteRepeatable(tween(LOADING_STEPS.size * 2_800, easing = LinearEasing)),
+            label = "steps",
+        )
+        Crossfade(step.toInt().coerceAtMost(LOADING_STEPS.lastIndex), label = "step") { index ->
+            Text(
+                stringResource(LOADING_STEPS[index]),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
         Spacer(Modifier.height(24.dp))
         TextButton(onClick = onCancel) { Text(stringResource(R.string.action_cancel)) }
     }
 }
+
+private val LOADING_STEPS = listOf(R.string.loading_step_1, R.string.loading_step_2, R.string.loading_step_3, R.string.loading_step_4)
 
 @Composable
 private fun ResultScreen(result: Screen.Result, onNewPlan: () -> Unit) {

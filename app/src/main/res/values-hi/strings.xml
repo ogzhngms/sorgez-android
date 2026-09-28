@@ -53,7 +53,6 @@
     <string name="action_next">आगे</string>
 
     <string name="confirm_title">योजना बनाने के लिए तैयार?</string>
-    <string name="confirm_body">पुष्टि करने पर AI इन जवाबों के आधार पर आपकी यात्रा की दिन-ब-दिन योजना बनाता है। बदलने के लिए किसी पंक्ति पर टैप करें।</string>
     <string name="label_destination">गंतव्य</string>
     <string name="label_days">अवधि</string>
     <string name="label_companions">साथ में</string>
@@ -62,13 +61,14 @@
     <string name="label_notes">नोट्स</string>
     <string name="label_pace">रफ़्तार</string>
     <string name="interests_none">कोई पसंद नहीं</string>
-    <string name="show_prompt">प्रॉम्प्ट दिखाएँ</string>
-    <string name="hide_prompt">प्रॉम्प्ट छिपाएँ</string>
     <string name="action_edit">बदलें</string>
     <string name="action_plan">ठीक है, योजना बनाएँ</string>
 
-    <string name="loading_title">आपकी योजना लिखी जा रही है…</string>
-    <string name="loading_body">AI आपकी यात्रा की योजना बना रहा है। इसमें आमतौर पर आधा मिनट लगता है, मॉडल व्यस्त हों तो थोड़ा ज़्यादा।</string>
+    <string name="loading_title">आपकी यात्रा तैयार हो रही है</string>
+    <string name="loading_step_1">रास्ता बनाया जा रहा है…</string>
+    <string name="loading_step_2">घूमने की जगहें चुनी जा रही हैं…</string>
+    <string name="loading_step_3">दिन तय किए जा रहे हैं…</string>
+    <string name="loading_step_4">बजट का हिसाब लगाया जा रहा है…</string>
     <string name="action_cancel">रद्द करें</string>
 
     <string name="budget_estimate">अनुमानित बजट: %1$s</string>

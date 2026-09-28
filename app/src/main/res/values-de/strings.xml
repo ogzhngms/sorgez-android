@@ -53,7 +53,6 @@
     <string name="action_next">Weiter</string>
 
     <string name="confirm_title">Bereit zum Planen?</string>
-    <string name="confirm_body">Wenn du bestätigst, plant die KI deine Reise anhand dieser Antworten Tag für Tag. Tippe auf eine Zeile, um sie zu ändern.</string>
     <string name="label_destination">Ziel</string>
     <string name="label_days">Dauer</string>
     <string name="label_companions">Mit</string>
@@ -62,13 +61,14 @@
     <string name="label_notes">Notizen</string>
     <string name="label_pace">Tempo</string>
     <string name="interests_none">Keine Vorliebe</string>
-    <string name="show_prompt">Prompt anzeigen</string>
-    <string name="hide_prompt">Prompt ausblenden</string>
     <string name="action_edit">Bearbeiten</string>
     <string name="action_plan">OK, planen</string>
 
-    <string name="loading_title">Dein Plan wird erstellt…</string>
-    <string name="loading_body">Die KI plant deine Reise. Das dauert meist etwa eine halbe Minute, länger, wenn die Modelle ausgelastet sind.</string>
+    <string name="loading_title">Deine Reise wird vorbereitet</string>
+    <string name="loading_step_1">Route wird geplant…</string>
+    <string name="loading_step_2">Sehenswürdigkeiten werden ausgewählt…</string>
+    <string name="loading_step_3">Tage werden eingeteilt…</string>
+    <string name="loading_step_4">Budget wird berechnet…</string>
     <string name="action_cancel">Abbrechen</string>
 
     <string name="budget_estimate">Geschätztes Budget: %1$s</string>

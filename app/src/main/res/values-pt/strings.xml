@@ -54,7 +54,6 @@
     <string name="action_next">Avançar</string>
 
     <string name="confirm_title">Pronto para planejar?</string>
-    <string name="confirm_body">Quando você confirmar, a IA planeja sua viagem dia a dia com base nessas respostas. Toque em uma linha para mudá-la.</string>
     <string name="label_destination">Destino</string>
     <string name="label_days">Duração</string>
     <string name="label_companions">Com</string>
@@ -63,13 +62,14 @@
     <string name="label_notes">Observações</string>
     <string name="label_pace">Ritmo</string>
     <string name="interests_none">Sem preferência</string>
-    <string name="show_prompt">Mostrar o prompt</string>
-    <string name="hide_prompt">Ocultar o prompt</string>
     <string name="action_edit">Editar</string>
     <string name="action_plan">OK, planejar</string>
 
-    <string name="loading_title">Escrevendo seu plano…</string>
-    <string name="loading_body">A IA está planejando sua viagem. Isso costuma levar meio minuto, um pouco mais quando os modelos estão ocupados.</string>
+    <string name="loading_title">Preparando sua viagem</string>
+    <string name="loading_step_1">Traçando sua rota…</string>
+    <string name="loading_step_2">Escolhendo lugares para visitar…</string>
+    <string name="loading_step_3">Organizando seus dias…</string>
+    <string name="loading_step_4">Calculando o orçamento…</string>
     <string name="action_cancel">Cancelar</string>
 
     <string name="budget_estimate">Orçamento estimado: %1$s</string>

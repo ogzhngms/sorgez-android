@@ -55,7 +55,6 @@
     <string name="action_next">Далее</string>
 
     <string name="confirm_title">Готов планировать?</string>
-    <string name="confirm_body">Когда ты подтвердишь, ИИ спланирует поездку по дням на основе этих ответов. Нажми на строку, чтобы изменить её.</string>
     <string name="label_destination">Куда</string>
     <string name="label_days">Длительность</string>
     <string name="label_companions">С кем</string>
@@ -64,13 +63,14 @@
     <string name="label_notes">Заметки</string>
     <string name="label_pace">Темп</string>
     <string name="interests_none">Без предпочтений</string>
-    <string name="show_prompt">Показать промпт</string>
-    <string name="hide_prompt">Скрыть промпт</string>
     <string name="action_edit">Изменить</string>
     <string name="action_plan">ОК, спланировать</string>
 
-    <string name="loading_title">Составляем план…</string>
-    <string name="loading_body">ИИ планирует твою поездку. Обычно это занимает около полминуты, дольше, если модели загружены.</string>
+    <string name="loading_title">Готовим твою поездку</string>
+    <string name="loading_step_1">Прокладываем маршрут…</string>
+    <string name="loading_step_2">Выбираем, что посмотреть…</string>
+    <string name="loading_step_3">Распределяем дни…</string>
+    <string name="loading_step_4">Считаем бюджет…</string>
     <string name="action_cancel">Отмена</string>
 
     <string name="budget_estimate">Примерный бюджет: %1$s</string>

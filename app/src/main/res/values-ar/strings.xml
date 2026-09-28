@@ -57,7 +57,6 @@
     <string name="action_next">التالي</string>
 
     <string name="confirm_title">هل أنت مستعد للتخطيط؟</string>
-    <string name="confirm_body">عند التأكيد يخطط الذكاء الاصطناعي رحلتك يومًا بيوم بناءً على هذه الإجابات. اضغط على أي سطر لتغييره.</string>
     <string name="label_destination">الوجهة</string>
     <string name="label_days">المدة</string>
     <string name="label_companions">مع</string>
@@ -66,13 +65,14 @@
     <string name="label_notes">ملاحظات</string>
     <string name="label_pace">الإيقاع</string>
     <string name="interests_none">لا تفضيل</string>
-    <string name="show_prompt">عرض الموجّه</string>
-    <string name="hide_prompt">إخفاء الموجّه</string>
     <string name="action_edit">تعديل</string>
     <string name="action_plan">حسنًا، خطّط</string>
 
-    <string name="loading_title">جارٍ إعداد خطتك…</string>
-    <string name="loading_body">الذكاء الاصطناعي يخطّط لرحلتك. يستغرق ذلك عادةً نصف دقيقة، وأكثر عندما تكون النماذج مشغولة.</string>
+    <string name="loading_title">جارٍ تجهيز رحلتك</string>
+    <string name="loading_step_1">نرسم مسارك…</string>
+    <string name="loading_step_2">نختار الأماكن التي ستزورها…</string>
+    <string name="loading_step_3">ننظّم أيامك…</string>
+    <string name="loading_step_4">نحسب الميزانية…</string>
     <string name="action_cancel">إلغاء</string>
 
     <string name="budget_estimate">الميزانية التقديرية: %1$s</string>

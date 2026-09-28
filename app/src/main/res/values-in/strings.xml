@@ -52,7 +52,6 @@
     <string name="action_next">Lanjut</string>
 
     <string name="confirm_title">Siap membuat rencana?</string>
-    <string name="confirm_body">Setelah kamu konfirmasi, AI merencanakan perjalananmu hari demi hari dari jawaban ini. Ketuk baris untuk mengubahnya.</string>
     <string name="label_destination">Tujuan</string>
     <string name="label_days">Durasi</string>
     <string name="label_companions">Dengan</string>
@@ -61,13 +60,14 @@
     <string name="label_notes">Catatan</string>
     <string name="label_pace">Tempo</string>
     <string name="interests_none">Tidak ada preferensi</string>
-    <string name="show_prompt">Tampilkan prompt</string>
-    <string name="hide_prompt">Sembunyikan prompt</string>
     <string name="action_edit">Ubah</string>
     <string name="action_plan">Oke, buat rencana</string>
 
-    <string name="loading_title">Menyusun rencanamu…</string>
-    <string name="loading_body">AI sedang merencanakan perjalananmu. Biasanya sekitar setengah menit, lebih lama jika model sedang sibuk.</string>
+    <string name="loading_title">Menyiapkan perjalananmu</string>
+    <string name="loading_step_1">Menyusun rute…</string>
+    <string name="loading_step_2">Memilih tempat untuk dikunjungi…</string>
+    <string name="loading_step_3">Mengatur hari-harimu…</string>
+    <string name="loading_step_4">Menghitung anggaran…</string>
     <string name="action_cancel">Batal</string>
 
     <string name="budget_estimate">Perkiraan anggaran: %1$s</string>

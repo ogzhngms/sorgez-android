@@ -52,7 +52,6 @@
     <string name="action_next">다음</string>
 
     <string name="confirm_title">계획을 만들까요?</string>
-    <string name="confirm_body">확인하면 AI가 이 답변을 바탕으로 여행을 하루 단위로 계획합니다. 바꾸려면 항목을 탭하세요.</string>
     <string name="label_destination">목적지</string>
     <string name="label_days">기간</string>
     <string name="label_companions">동행</string>
@@ -61,13 +60,14 @@
     <string name="label_notes">메모</string>
     <string name="label_pace">속도</string>
     <string name="interests_none">상관없음</string>
-    <string name="show_prompt">프롬프트 보기</string>
-    <string name="hide_prompt">프롬프트 숨기기</string>
     <string name="action_edit">수정</string>
     <string name="action_plan">좋아요, 계획하기</string>
 
-    <string name="loading_title">계획을 작성하는 중…</string>
-    <string name="loading_body">AI가 여행을 계획하고 있어요. 보통 30초 정도 걸리며, 모델이 바쁘면 조금 더 걸려요.</string>
+    <string name="loading_title">여행을 준비하고 있어요</string>
+    <string name="loading_step_1">경로를 그리는 중…</string>
+    <string name="loading_step_2">가볼 곳을 고르는 중…</string>
+    <string name="loading_step_3">일정을 짜는 중…</string>
+    <string name="loading_step_4">예산을 계산하는 중…</string>
     <string name="action_cancel">취소</string>
 
     <string name="budget_estimate">예상 예산: %1$s</string>

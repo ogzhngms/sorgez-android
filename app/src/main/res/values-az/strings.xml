@@ -53,7 +53,6 @@
     <string name="action_next">İrəli</string>
 
     <string name="confirm_title">Plan hazırlansın?</string>
-    <string name="confirm_body">Təsdiqlədikdə süni intellekt bu cavablara görə səyahətini gün-gün planlayır. Dəyişmək üçün sətrə toxun.</string>
     <string name="label_destination">Hara</string>
     <string name="label_days">Müddət</string>
     <string name="label_companions">Kiminlə</string>
@@ -62,13 +61,14 @@
     <string name="label_notes">Qeydlər</string>
     <string name="label_pace">Temp</string>
     <string name="interests_none">Fərqi yoxdur</string>
-    <string name="show_prompt">Promptu göstər</string>
-    <string name="hide_prompt">Promptu gizlət</string>
     <string name="action_edit">Redaktə et</string>
     <string name="action_plan">Bəli, planla</string>
 
-    <string name="loading_title">Planın hazırlanır…</string>
-    <string name="loading_body">Süni intellekt səyahətini planlaşdırır. Adətən yarım dəqiqə çəkir, modellər məşğul olanda bir az daha uzun.</string>
+    <string name="loading_title">Səyahətin hazırlanır</string>
+    <string name="loading_step_1">Marşrut çəkilir…</string>
+    <string name="loading_step_2">Görməli yerlər seçilir…</string>
+    <string name="loading_step_3">Günlər planlaşdırılır…</string>
+    <string name="loading_step_4">Büdcə hesablanır…</string>
     <string name="action_cancel">Ləğv et</string>
 
     <string name="budget_estimate">Təxmini büdcə: %1$s</string>
