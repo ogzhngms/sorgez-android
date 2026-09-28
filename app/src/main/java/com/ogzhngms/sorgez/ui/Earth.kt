@@ -123,7 +123,9 @@ fun DestinationEarth(place: Place?, modifier: Modifier = Modifier) {
         val zoomOut = launch { zoom.animateTo(1f, tween(600, easing = FastOutSlowInEasing)) }
         if (place == null) {
             launch { lat.animateTo(HOME_LAT, tween(1200)) }
-            while (true) lon.animateTo(lon.value - FULL_TURN, tween(60_000, easing = LinearEasing))
+            // An infinite spec, not a loop of turns, so UI tests can pause it like any other endless animation.
+            // Each restart jumps back a whole turn, which looks the same.
+            lon.animateTo(lon.value - FULL_TURN, infiniteRepeatable(tween(60_000, easing = LinearEasing)))
         } else {
             val targetLon = Math.toRadians(place.lon.toDouble()).toFloat()
             // Take the short way round.
