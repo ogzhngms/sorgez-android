@@ -23,8 +23,10 @@ class MainActivity : ComponentActivity() {
                 val gemini = GeminiPlanner(ask = firebaseGemini())
                 val cache = if (BuildConfig.DEBUG) PlanCache(File(application.cacheDir, "plans")) else null
                 TripViewModel { answers ->
-                    val prompt = buildPrompt(answers, promptLanguage(), AppSettings.currency(application))
-                    cache?.get(prompt) ?: gemini.plan(prompt).also { cache?.put(prompt, it) }
+                    val language = promptLanguage()
+                    val currency = AppSettings.currency(application)
+                    val key = planKey(answers, language, currency)
+                    cache?.get(key) ?: gemini.plan(buildPrompt(answers, language, currency)).also { cache?.put(key, it) }
                 }
             }
         }
