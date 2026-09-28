@@ -72,6 +72,14 @@ class GeminiPlannerTest {
         assertEquals(GEMINI_MODELS, asked)
     }
 
+    // An unregistered debug build or a modified copy: no other model would accept it, so stop and say so.
+    @Test
+    fun rejectedAppCheckStopsAtOnce() {
+        val rejected = make<ServerException>("Firebase App Check token is invalid.", null)
+        assertEquals(R.string.error_api_key, failure(planner("gemini-3.8-flash" to rejected)))
+        assertEquals(1, asked.size)
+    }
+
     @Test
     fun everyModelOutOfQuotaSaysWait() {
         val quota = make<QuotaExceededException>("quota", null)

@@ -56,7 +56,13 @@ class GeminiPlanner(private val ask: suspend (model: String, prompt: String) -> 
 }
 
 // Retired (404) or overloaded (5xx) models come back as ServerException; another model may still answer.
-private fun cannotServe(e: Throwable) = e is ServerException || e is QuotaExceededException || e is RequestTimeoutException
+// A rejected App Check token is also a ServerException, but no other model would accept it either.
+private fun cannotServe(e: Throwable) =
+    !appCheckRejected(e) && (e is ServerException || e is QuotaExceededException || e is RequestTimeoutException)
+
+// The service turned the app away because it could not prove it is the real app: a debug build whose token
+// is not registered yet, or a modified copy.
+private fun appCheckRejected(e: Throwable) = e is FirebaseAIException && e.message.orEmpty().contains("App Check", ignoreCase = true)
 
 // Gemini through Firebase AI Logic: the Gemini key stays in the Firebase project and App Check vouches for the app,
 // so the APK carries no key at all.
@@ -89,7 +95,13 @@ internal fun jsonSchema(schema: Map<*, *>): JsonSchema<*> = when (schema["type"]
 }
 
 @StringRes
-fun errorMessage(error: Throwable): Int = when (error) {
+fun errorMessage(error: Throwable): Int = when {
+    appCheckRejected(error) -> R.string.error_api_key
+    else -> errorMessageByType(error)
+}
+
+@StringRes
+private fun errorMessageByType(error: Throwable): Int = when (error) {
     is QuotaExceededException -> R.string.error_rate_limit
     is ServerException, is RequestTimeoutException -> R.string.error_busy
     is InvalidAPIKeyException, is ServiceDisabledException, is APINotConfiguredException, is PermissionMissingException -> R.string.error_api_key
