@@ -108,12 +108,6 @@ internal fun HomeScreen(onStart: () -> Unit, onProfile: () -> Unit) {
                 )
             }
         }
-        Text(
-            stringResource(R.string.home_tagline),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.align(Alignment.BottomCenter).padding(start = 24.dp, end = 24.dp, bottom = 48.dp),
-        )
     }
 }
 

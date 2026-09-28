@@ -2,7 +2,6 @@
     <string name="app_name" translatable="false">SorGez</string>
 
     <string name="action_start">Start</string>
-    <string name="home_tagline">Plan your next trip with AI</string>
     <string name="cd_profile">Profile</string>
     <string name="cd_back">Back</string>
     <string name="profile_title">Profile</string>

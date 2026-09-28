@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">Начать</string>
-    <string name="home_tagline">Спланируй следующую поездку с ИИ</string>
     <string name="cd_profile">Профиль</string>
     <string name="cd_back">Назад</string>
     <string name="profile_title">Профиль</string>

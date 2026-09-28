@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">开始</string>
-    <string name="home_tagline">用 AI 规划你的下一次旅行</string>
     <string name="cd_profile">个人资料</string>
     <string name="cd_back">返回</string>
     <string name="profile_title">个人资料</string>

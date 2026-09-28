@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">Başla</string>
-    <string name="home_tagline">Bir sonraki gezini yapay zekâyla planla</string>
     <string name="cd_profile">Profil</string>
     <string name="cd_back">Geri</string>
     <string name="profile_title">Profil</string>

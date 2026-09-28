@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">Starten</string>
-    <string name="home_tagline">Plane deine nächste Reise mit KI</string>
     <string name="cd_profile">Profil</string>
     <string name="cd_back">Zurück</string>
     <string name="profile_title">Profil</string>

@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">ابدأ</string>
-    <string name="home_tagline">خطّط لرحلتك القادمة بالذكاء الاصطناعي</string>
     <string name="cd_profile">الملف الشخصي</string>
     <string name="cd_back">رجوع</string>
     <string name="profile_title">الملف الشخصي</string>

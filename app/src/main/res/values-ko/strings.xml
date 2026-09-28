@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">시작하기</string>
-    <string name="home_tagline">AI로 다음 여행을 계획하세요</string>
     <string name="cd_profile">프로필</string>
     <string name="cd_back">뒤로</string>
     <string name="profile_title">프로필</string>

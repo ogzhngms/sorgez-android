@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">Commencer</string>
-    <string name="home_tagline">Planifie ton prochain voyage avec l\'IA</string>
     <string name="cd_profile">Profil</string>
     <string name="cd_back">Retour</string>
     <string name="profile_title">Profil</string>

@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">はじめる</string>
-    <string name="home_tagline">AI で次の旅行を計画しよう</string>
     <string name="cd_profile">プロフィール</string>
     <string name="cd_back">戻る</string>
     <string name="profile_title">プロフィール</string>
