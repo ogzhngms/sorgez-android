@@ -46,10 +46,11 @@ class TripViewModel(private val planner: suspend (TripAnswers) -> String) : View
         screen = if (step < QUESTIONS.lastIndex) Screen.Question(step + 1) else Screen.Confirm
     }
 
+    // Backing out of the first question to Home starts over, so Start always opens a blank trip.
     fun back() {
         screen = when (val current = screen) {
             Screen.Home, Screen.Profile -> Screen.Home
-            is Screen.Question -> if (current.step == 0) Screen.Home else Screen.Question(current.step - 1)
+            is Screen.Question -> if (current.step == 0) return restart() else Screen.Question(current.step - 1)
             Screen.Confirm -> Screen.Question(QUESTIONS.lastIndex)
             else -> {
                 job?.cancel()

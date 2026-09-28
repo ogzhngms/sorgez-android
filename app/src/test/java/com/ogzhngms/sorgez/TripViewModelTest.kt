@@ -39,6 +39,23 @@ class TripViewModelTest {
     }
 
     @Test
+    fun backingOutToHomeClearsTheAnswers() {
+        val vm = TripViewModel { sample }
+        vm.start()
+        vm.update { it.copy(destination = "Ankara") }
+        vm.next()
+        vm.update { it.copy(days = 5) }
+        vm.back()
+        assertEquals(Screen.Question(0), vm.screen)
+        assertEquals("Ankara", vm.answers.destination)
+        vm.back()
+        assertEquals(Screen.Home, vm.screen)
+        assertEquals(TripAnswers(), vm.answers)
+        vm.start()
+        assertEquals("", vm.answers.destination)
+    }
+
+    @Test
     fun newPlanClearsTheAnswersAndGoesHome() {
         val vm = TripViewModel { sample }
         vm.start()
