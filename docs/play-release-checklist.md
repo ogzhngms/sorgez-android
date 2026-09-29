@@ -10,7 +10,17 @@ Geliştirici: Ogitech Studio. Uygulama: SorGez. Paket: com.ogzhngms.sorgez.
 - [x] Gizlilik politikası: https://ogzhngms.github.io/sorgez/privacy.html (profil > Hakkında'da link)
 - [x] Mağaza metinleri: `play-store-tr.md`, `play-store-en.md`
 
-## Senin yapacakların
+## Durum (29 Eylül 2026)
+
+- [x] Yükleme anahtarı: `~/Developer/ogi/keys/sorgez-upload.jks` (alias `sorgez`) — yedeğini al, şifreyi kaybetme
+- [x] Play Console'da uygulama oluşturuldu, 1.0 AAB kapalı test (Alpha) kanalında
+- [x] Play imzalama SHA-256 Firebase'e eklendi; App Check > SorGez > Play Integrity kayıtlı; Integrity API Seyahatname projesine bağlı
+- [x] Uygulama içeriği beyanları, mağaza girişi (`store-assets/tr-TR`), kategori ve iletişim tamam
+- [x] Test kullanıcıları: sutakibi-testers@ ve testers-community@googlegroups.com, 178 ülke
+- [x] 15 değişiklik incelemeye gönderildi
+- [ ] Onaydan sonra katılım linkini gruplara paylaş; en az 12 kişi 14 gün kesintisiz
+
+## İlk kurulum adımları (referans)
 
 1. Yükleme anahtarı oluştur (bir kez; şifreleri sen belirle, kaybetme):
    ```bash
