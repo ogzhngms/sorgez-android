@@ -75,7 +75,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -90,7 +89,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -100,7 +98,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.ogzhngms.sorgez.AppSettings
 import com.ogzhngms.sorgez.Budget
-import com.ogzhngms.sorgez.BuildConfig
 import com.ogzhngms.sorgez.Companions
 import com.ogzhngms.sorgez.Day
 import com.ogzhngms.sorgez.Interest
@@ -121,7 +118,6 @@ import java.util.Locale
 import kotlin.math.abs
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 
 @Composable
 fun SorGezApp(vm: TripViewModel, onLanguageChange: (Language) -> Unit = {}) {
@@ -596,7 +592,7 @@ private fun ResultScreen(result: Screen.Result, onNewPlan: () -> Unit) {
             )
         }
         HorizontalPager(pager, Modifier.weight(1f)) { page ->
-            if (page < itinerary.days.size) DayPage(itinerary.days[page]) else TipsPage(itinerary.tips, result.json)
+            if (page < itinerary.days.size) DayPage(itinerary.days[page]) else TipsPage(itinerary.tips)
         }
         Row(Modifier.padding(horizontal = 24.dp, vertical = 12.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             OutlinedButton(onClick = { share(context, itinerary) }, modifier = Modifier.weight(1f)) {
@@ -656,8 +652,7 @@ private fun DayPage(day: Day) {
 private fun isEvening(time: String): Boolean = time.substringBefore(':').toIntOrNull()?.let { it >= 17 || it < 5 } == true
 
 @Composable
-private fun TipsPage(tips: List<String>, json: String) {
-    var showJson by rememberSaveable { mutableStateOf(false) }
+private fun TipsPage(tips: List<String>) {
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         items(tips) { tip ->
             Card(Modifier.fillMaxWidth()) {
@@ -666,13 +661,6 @@ private fun TipsPage(tips: List<String>, json: String) {
                     Text(tip, style = MaterialTheme.typography.bodyMedium)
                 }
             }
-        }
-        // The raw JSON is a tool for the developer, so only debug builds offer it.
-        if (BuildConfig.DEBUG) item {
-            TextButton(onClick = { showJson = !showJson }) {
-                Text(stringResource(if (showJson) R.string.hide_json else R.string.show_json))
-            }
-            if (showJson) Code(remember(json) { JSONObject(json).toString(2) })
         }
     }
 }
@@ -712,12 +700,5 @@ private fun FailedScreen(failed: Screen.Failed, onRetry: () -> Unit, onEdit: () 
         Spacer(Modifier.height(12.dp))
         Button(onClick = onRetry, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_retry)) }
         OutlinedButton(onClick = onEdit, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_edit)) }
-    }
-}
-
-@Composable
-private fun Code(text: String) {
-    Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = MaterialTheme.shapes.small) {
-        Text(text, fontFamily = FontFamily.Monospace, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(12.dp))
     }
 }

@@ -75,8 +75,6 @@
     <string name="day_title">%1$d日目 · %2$s</string>
     <string name="day_tab">%1$d日目</string>
     <string name="tips_title">ヒント</string>
-    <string name="show_json">JSON を表示</string>
-    <string name="hide_json">JSON を隠す</string>
     <string name="action_new_plan">新しいプラン</string>
     <string name="action_share">共有</string>
 

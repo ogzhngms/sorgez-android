@@ -75,8 +75,6 @@
     <string name="day_title">第 %1$d 天 · %2$s</string>
     <string name="day_tab">第 %1$d 天</string>
     <string name="tips_title">小贴士</string>
-    <string name="show_json">显示 JSON</string>
-    <string name="hide_json">隐藏 JSON</string>
     <string name="action_new_plan">新行程</string>
     <string name="action_share">分享</string>
 

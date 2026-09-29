@@ -75,8 +75,6 @@
     <string name="day_title">Hari %1$d · %2$s</string>
     <string name="day_tab">Hari %1$d</string>
     <string name="tips_title">Tips</string>
-    <string name="show_json">Tampilkan JSON</string>
-    <string name="hide_json">Sembunyikan JSON</string>
     <string name="action_new_plan">Rencana baru</string>
     <string name="action_share">Bagikan</string>
 

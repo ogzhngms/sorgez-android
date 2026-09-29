@@ -76,8 +76,6 @@
     <string name="day_title">Gün %1$d · %2$s</string>
     <string name="day_tab">%1$d. gün</string>
     <string name="tips_title">Məsləhətlər</string>
-    <string name="show_json">JSON-u göstər</string>
-    <string name="hide_json">JSON-u gizlət</string>
     <string name="action_new_plan">Yeni plan</string>
     <string name="action_share">Paylaş</string>
 

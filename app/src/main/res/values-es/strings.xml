@@ -77,8 +77,6 @@
     <string name="day_title">Día %1$d · %2$s</string>
     <string name="day_tab">Día %1$d</string>
     <string name="tips_title">Consejos</string>
-    <string name="show_json">Ver JSON</string>
-    <string name="hide_json">Ocultar JSON</string>
     <string name="action_new_plan">Nuevo plan</string>
     <string name="action_share">Compartir</string>
 

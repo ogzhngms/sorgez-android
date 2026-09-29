@@ -75,8 +75,6 @@
     <string name="day_title">%1$d일차 · %2$s</string>
     <string name="day_tab">%1$d일차</string>
     <string name="tips_title">팁</string>
-    <string name="show_json">JSON 보기</string>
-    <string name="hide_json">JSON 숨기기</string>
     <string name="action_new_plan">새 계획</string>
     <string name="action_share">공유</string>
 
