@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">Mulai</string>
-    <string name="home_tagline">Rencanakan perjalanan berikutnya dengan AI</string>
     <string name="cd_profile">Profil</string>
     <string name="cd_back">Kembali</string>
     <string name="profile_title">Profil</string>
@@ -16,23 +15,11 @@
     <string name="about_version">Versi %1$s</string>
     <string name="about_images">Gambar Bumi: NASA</string>
     <string name="about_source">Kode sumber di GitHub</string>
+    <string name="about_privacy">Kebijakan privasi</string>
 
     <string name="step_counter">Langkah %1$d dari %2$d</string>
     <string name="q_destination">Kamu ingin pergi ke mana?</string>
     <string name="hint_destination">Kota atau negara</string>
-    <string name="popular_title">Populer</string>
-    <string name="about_cappadocia">Balon udara dan cerobong peri</string>
-    <string name="about_rome">Sejarah dan pasta</string>
-    <string name="about_paris">Seni dan kafe</string>
-    <string name="about_tokyo">Neon dan jajanan kaki lima</string>
-    <string name="about_barcelona">Gaudí dan pantai</string>
-    <string name="about_dubai">Gurun dan pencakar langit</string>
-    <string name="place_cappadocia">Kapadokia</string>
-    <string name="place_rome">Roma</string>
-    <string name="place_paris">Paris</string>
-    <string name="place_tokyo">Tokyo</string>
-    <string name="place_barcelona">Barcelona</string>
-    <string name="place_dubai">Dubai</string>
     <string name="q_days">Berapa hari?</string>
     <plurals name="days">
         <item quantity="other">%d hari</item>
@@ -58,38 +45,39 @@
     <string name="interest_beach">Pantai</string>
     <string name="interest_adventure">Petualangan</string>
     <string name="hint_notes">Ada yang lain? (opsional)</string>
-    <string name="q_pace">Kamu suka tempo seperti apa?</string>
-    <string name="pace_relaxed">Santai</string>
-    <string name="pace_balanced">Seimbang</string>
-    <string name="pace_packed">Padat</string>
     <string name="action_back">Kembali</string>
     <string name="action_next">Lanjut</string>
 
     <string name="confirm_title">Siap membuat rencana?</string>
-    <string name="confirm_body">Setelah kamu konfirmasi, jawabanmu menjadi prompt untuk AI, yang mengembalikan rencana dalam format JSON.</string>
     <string name="label_destination">Tujuan</string>
     <string name="label_days">Durasi</string>
+    <string name="when_title">Kapan kamu pergi?</string>
+    <string name="when_unknown">Belum pasti</string>
+    <string name="label_when">Kapan</string>
+    <string name="days_weekend">Akhir pekan</string>
+    <string name="days_week">1 minggu</string>
+    <string name="days_two_weeks">2 minggu</string>
     <string name="label_companions">Dengan</string>
     <string name="label_budget">Anggaran</string>
     <string name="label_interests">Minat</string>
     <string name="label_notes">Catatan</string>
-    <string name="label_pace">Tempo</string>
     <string name="interests_none">Tidak ada preferensi</string>
-    <string name="show_prompt">Tampilkan prompt</string>
-    <string name="hide_prompt">Sembunyikan prompt</string>
     <string name="action_edit">Ubah</string>
     <string name="action_plan">Oke, buat rencana</string>
 
-    <string name="loading_title">Menyusun rencanamu…</string>
-    <string name="loading_body">AI sedang merencanakan perjalananmu. Biasanya sekitar setengah menit, lebih lama jika model sedang sibuk.</string>
+    <string name="loading_title">Menyiapkan perjalananmu</string>
+    <string name="loading_step_1">Menyusun rute…</string>
+    <string name="loading_step_2">Memilih tempat untuk dikunjungi…</string>
+    <string name="loading_step_3">Mengatur hari-harimu…</string>
+    <string name="loading_step_4">Menghitung anggaran…</string>
     <string name="action_cancel">Batal</string>
 
     <string name="budget_estimate">Perkiraan anggaran: %1$s</string>
     <string name="day_title">Hari %1$d · %2$s</string>
+    <string name="day_tab">Hari %1$d</string>
     <string name="tips_title">Tips</string>
-    <string name="show_json">Tampilkan JSON</string>
-    <string name="hide_json">Sembunyikan JSON</string>
     <string name="action_new_plan">Rencana baru</string>
+    <string name="action_share">Bagikan</string>
 
     <string name="error_title">Rencana tidak dapat dibuat</string>
     <string name="error_api_key">Layanan AI belum disiapkan untuk aplikasi ini. Coba lagi nanti.</string>

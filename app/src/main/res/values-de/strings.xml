@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">Starten</string>
-    <string name="home_tagline">Plane deine nächste Reise mit KI</string>
     <string name="cd_profile">Profil</string>
     <string name="cd_back">Zurück</string>
     <string name="profile_title">Profil</string>
@@ -16,23 +15,11 @@
     <string name="about_version">Version %1$s</string>
     <string name="about_images">Erdbilder: NASA</string>
     <string name="about_source">Quellcode auf GitHub</string>
+    <string name="about_privacy">Datenschutzerklärung</string>
 
     <string name="step_counter">Schritt %1$d von %2$d</string>
     <string name="q_destination">Wohin möchtest du reisen?</string>
     <string name="hint_destination">Eine Stadt oder ein Land</string>
-    <string name="popular_title">Beliebt</string>
-    <string name="about_cappadocia">Ballons und Feenkamine</string>
-    <string name="about_rome">Geschichte und Pasta</string>
-    <string name="about_paris">Kunst und Cafés</string>
-    <string name="about_tokyo">Neon und Streetfood</string>
-    <string name="about_barcelona">Gaudí und Strände</string>
-    <string name="about_dubai">Wüste und Wolkenkratzer</string>
-    <string name="place_cappadocia">Kappadokien</string>
-    <string name="place_rome">Rom</string>
-    <string name="place_paris">Paris</string>
-    <string name="place_tokyo">Tokio</string>
-    <string name="place_barcelona">Barcelona</string>
-    <string name="place_dubai">Dubai</string>
     <string name="q_days">Wie viele Tage?</string>
     <plurals name="days">
         <item quantity="one">%d Tag</item>
@@ -59,38 +46,39 @@
     <string name="interest_beach">Strände</string>
     <string name="interest_adventure">Abenteuer</string>
     <string name="hint_notes">Sonst noch etwas? (optional)</string>
-    <string name="q_pace">Welches Tempo magst du?</string>
-    <string name="pace_relaxed">Entspannt</string>
-    <string name="pace_balanced">Ausgewogen</string>
-    <string name="pace_packed">Straff</string>
     <string name="action_back">Zurück</string>
     <string name="action_next">Weiter</string>
 
     <string name="confirm_title">Bereit zum Planen?</string>
-    <string name="confirm_body">Wenn du bestätigst, werden deine Antworten zu einem Prompt für die KI, die den Plan als JSON zurückgibt.</string>
     <string name="label_destination">Ziel</string>
     <string name="label_days">Dauer</string>
+    <string name="when_title">Wann fährst du?</string>
+    <string name="when_unknown">Noch unklar</string>
+    <string name="label_when">Wann</string>
+    <string name="days_weekend">Wochenende</string>
+    <string name="days_week">1 Woche</string>
+    <string name="days_two_weeks">2 Wochen</string>
     <string name="label_companions">Mit</string>
     <string name="label_budget">Budget</string>
     <string name="label_interests">Interessen</string>
     <string name="label_notes">Notizen</string>
-    <string name="label_pace">Tempo</string>
     <string name="interests_none">Keine Vorliebe</string>
-    <string name="show_prompt">Prompt anzeigen</string>
-    <string name="hide_prompt">Prompt ausblenden</string>
     <string name="action_edit">Bearbeiten</string>
     <string name="action_plan">OK, planen</string>
 
-    <string name="loading_title">Dein Plan wird erstellt…</string>
-    <string name="loading_body">Die KI plant deine Reise. Das dauert meist etwa eine halbe Minute, länger, wenn die Modelle ausgelastet sind.</string>
+    <string name="loading_title">Deine Reise wird vorbereitet</string>
+    <string name="loading_step_1">Route wird geplant…</string>
+    <string name="loading_step_2">Sehenswürdigkeiten werden ausgewählt…</string>
+    <string name="loading_step_3">Tage werden eingeteilt…</string>
+    <string name="loading_step_4">Budget wird berechnet…</string>
     <string name="action_cancel">Abbrechen</string>
 
     <string name="budget_estimate">Geschätztes Budget: %1$s</string>
     <string name="day_title">Tag %1$d · %2$s</string>
+    <string name="day_tab">Tag %1$d</string>
     <string name="tips_title">Tipps</string>
-    <string name="show_json">JSON anzeigen</string>
-    <string name="hide_json">JSON ausblenden</string>
     <string name="action_new_plan">Neuer Plan</string>
+    <string name="action_share">Teilen</string>
 
     <string name="error_title">Der Plan konnte nicht erstellt werden</string>
     <string name="error_api_key">Der KI-Dienst ist für diese App noch nicht eingerichtet. Versuche es später erneut.</string>

@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">시작하기</string>
-    <string name="home_tagline">AI로 다음 여행을 계획하세요</string>
     <string name="cd_profile">프로필</string>
     <string name="cd_back">뒤로</string>
     <string name="profile_title">프로필</string>
@@ -16,23 +15,11 @@
     <string name="about_version">버전 %1$s</string>
     <string name="about_images">지구 이미지: NASA</string>
     <string name="about_source">GitHub의 소스 코드</string>
+    <string name="about_privacy">개인정보처리방침</string>
 
     <string name="step_counter">%2$d단계 중 %1$d단계</string>
     <string name="q_destination">어디로 가고 싶나요?</string>
     <string name="hint_destination">도시 또는 나라</string>
-    <string name="popular_title">인기</string>
-    <string name="about_cappadocia">열기구와 요정의 굴뚝</string>
-    <string name="about_rome">역사와 파스타</string>
-    <string name="about_paris">예술과 카페</string>
-    <string name="about_tokyo">네온과 길거리 음식</string>
-    <string name="about_barcelona">가우디와 해변</string>
-    <string name="about_dubai">사막과 마천루</string>
-    <string name="place_cappadocia">카파도키아</string>
-    <string name="place_rome">로마</string>
-    <string name="place_paris">파리</string>
-    <string name="place_tokyo">도쿄</string>
-    <string name="place_barcelona">바르셀로나</string>
-    <string name="place_dubai">두바이</string>
     <string name="q_days">며칠 동안 가나요?</string>
     <plurals name="days">
         <item quantity="other">%d일</item>
@@ -58,38 +45,39 @@
     <string name="interest_beach">해변</string>
     <string name="interest_adventure">모험</string>
     <string name="hint_notes">그 밖에 원하는 게 있나요? (선택)</string>
-    <string name="q_pace">어떤 속도가 좋나요?</string>
-    <string name="pace_relaxed">여유롭게</string>
-    <string name="pace_balanced">적당히</string>
-    <string name="pace_packed">빡빡하게</string>
     <string name="action_back">뒤로</string>
     <string name="action_next">다음</string>
 
     <string name="confirm_title">계획을 만들까요?</string>
-    <string name="confirm_body">확인하면 답변이 AI용 프롬프트가 되고, AI가 계획을 JSON으로 돌려줍니다.</string>
     <string name="label_destination">목적지</string>
     <string name="label_days">기간</string>
+    <string name="when_title">언제 가나요?</string>
+    <string name="when_unknown">아직 모르겠어요</string>
+    <string name="label_when">시기</string>
+    <string name="days_weekend">주말</string>
+    <string name="days_week">1주</string>
+    <string name="days_two_weeks">2주</string>
     <string name="label_companions">동행</string>
     <string name="label_budget">예산</string>
     <string name="label_interests">관심사</string>
     <string name="label_notes">메모</string>
-    <string name="label_pace">속도</string>
     <string name="interests_none">상관없음</string>
-    <string name="show_prompt">프롬프트 보기</string>
-    <string name="hide_prompt">프롬프트 숨기기</string>
     <string name="action_edit">수정</string>
     <string name="action_plan">좋아요, 계획하기</string>
 
-    <string name="loading_title">계획을 작성하는 중…</string>
-    <string name="loading_body">AI가 여행을 계획하고 있어요. 보통 30초 정도 걸리며, 모델이 바쁘면 조금 더 걸려요.</string>
+    <string name="loading_title">여행을 준비하고 있어요</string>
+    <string name="loading_step_1">경로를 그리는 중…</string>
+    <string name="loading_step_2">가볼 곳을 고르는 중…</string>
+    <string name="loading_step_3">일정을 짜는 중…</string>
+    <string name="loading_step_4">예산을 계산하는 중…</string>
     <string name="action_cancel">취소</string>
 
     <string name="budget_estimate">예상 예산: %1$s</string>
     <string name="day_title">%1$d일차 · %2$s</string>
+    <string name="day_tab">%1$d일차</string>
     <string name="tips_title">팁</string>
-    <string name="show_json">JSON 보기</string>
-    <string name="hide_json">JSON 숨기기</string>
     <string name="action_new_plan">새 계획</string>
+    <string name="action_share">공유</string>
 
     <string name="error_title">계획을 만들지 못했어요</string>
     <string name="error_api_key">이 앱의 AI 서비스가 아직 설정되지 않았습니다. 나중에 다시 시도하세요.</string>

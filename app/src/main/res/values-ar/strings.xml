@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">ابدأ</string>
-    <string name="home_tagline">خطّط لرحلتك القادمة بالذكاء الاصطناعي</string>
     <string name="cd_profile">الملف الشخصي</string>
     <string name="cd_back">رجوع</string>
     <string name="profile_title">الملف الشخصي</string>
@@ -16,23 +15,11 @@
     <string name="about_version">الإصدار %1$s</string>
     <string name="about_images">صور الأرض: ناسا</string>
     <string name="about_source">الشيفرة المصدرية على GitHub</string>
+    <string name="about_privacy">سياسة الخصوصية</string>
 
     <string name="step_counter">الخطوة %1$d من %2$d</string>
     <string name="q_destination">إلى أين تريد الذهاب؟</string>
     <string name="hint_destination">مدينة أو دولة</string>
-    <string name="popular_title">الأكثر شعبية</string>
-    <string name="about_cappadocia">مناطيد ومداخن الجن</string>
-    <string name="about_rome">تاريخ ومعكرونة</string>
-    <string name="about_paris">فن ومقاهٍ</string>
-    <string name="about_tokyo">أضواء النيون وطعام الشارع</string>
-    <string name="about_barcelona">غاودي والشواطئ</string>
-    <string name="about_dubai">صحراء وناطحات سحاب</string>
-    <string name="place_cappadocia">كابادوكيا</string>
-    <string name="place_rome">روما</string>
-    <string name="place_paris">باريس</string>
-    <string name="place_tokyo">طوكيو</string>
-    <string name="place_barcelona">برشلونة</string>
-    <string name="place_dubai">دبي</string>
     <string name="q_days">كم يومًا؟</string>
     <plurals name="days">
         <item quantity="zero">%d يوم</item>
@@ -63,38 +50,39 @@
     <string name="interest_beach">الشواطئ</string>
     <string name="interest_adventure">المغامرة</string>
     <string name="hint_notes">هل هناك شيء آخر؟ (اختياري)</string>
-    <string name="q_pace">ما الإيقاع الذي تفضّله؟</string>
-    <string name="pace_relaxed">هادئ</string>
-    <string name="pace_balanced">متوازن</string>
-    <string name="pace_packed">مكثّف</string>
     <string name="action_back">رجوع</string>
     <string name="action_next">التالي</string>
 
     <string name="confirm_title">هل أنت مستعد للتخطيط؟</string>
-    <string name="confirm_body">عند التأكيد تتحول إجاباتك إلى موجّه (prompt) للذكاء الاصطناعي، الذي يعيد الخطة بصيغة JSON.</string>
     <string name="label_destination">الوجهة</string>
     <string name="label_days">المدة</string>
+    <string name="when_title">متى ستسافر؟</string>
+    <string name="when_unknown">لم أحدد بعد</string>
+    <string name="label_when">متى</string>
+    <string name="days_weekend">عطلة نهاية الأسبوع</string>
+    <string name="days_week">أسبوع واحد</string>
+    <string name="days_two_weeks">أسبوعان</string>
     <string name="label_companions">مع</string>
     <string name="label_budget">الميزانية</string>
     <string name="label_interests">الاهتمامات</string>
     <string name="label_notes">ملاحظات</string>
-    <string name="label_pace">الإيقاع</string>
     <string name="interests_none">لا تفضيل</string>
-    <string name="show_prompt">عرض الموجّه</string>
-    <string name="hide_prompt">إخفاء الموجّه</string>
     <string name="action_edit">تعديل</string>
     <string name="action_plan">حسنًا، خطّط</string>
 
-    <string name="loading_title">جارٍ إعداد خطتك…</string>
-    <string name="loading_body">الذكاء الاصطناعي يخطّط لرحلتك. يستغرق ذلك عادةً نصف دقيقة، وأكثر عندما تكون النماذج مشغولة.</string>
+    <string name="loading_title">جارٍ تجهيز رحلتك</string>
+    <string name="loading_step_1">نرسم مسارك…</string>
+    <string name="loading_step_2">نختار الأماكن التي ستزورها…</string>
+    <string name="loading_step_3">ننظّم أيامك…</string>
+    <string name="loading_step_4">نحسب الميزانية…</string>
     <string name="action_cancel">إلغاء</string>
 
     <string name="budget_estimate">الميزانية التقديرية: %1$s</string>
     <string name="day_title">اليوم %1$d · %2$s</string>
+    <string name="day_tab">اليوم %1$d</string>
     <string name="tips_title">نصائح</string>
-    <string name="show_json">عرض JSON</string>
-    <string name="hide_json">إخفاء JSON</string>
     <string name="action_new_plan">خطة جديدة</string>
+    <string name="action_share">مشاركة</string>
 
     <string name="error_title">تعذّر إنشاء الخطة</string>
     <string name="error_api_key">خدمة الذكاء الاصطناعي غير مهيأة لهذا التطبيق بعد. حاول مرة أخرى لاحقًا.</string>

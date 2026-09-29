@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">Başla</string>
-    <string name="home_tagline">Növbəti səyahətini süni intellektlə planla</string>
     <string name="cd_profile">Profil</string>
     <string name="cd_back">Geri</string>
     <string name="profile_title">Profil</string>
@@ -16,23 +15,11 @@
     <string name="about_version">Versiya %1$s</string>
     <string name="about_images">Yer şəkilləri: NASA</string>
     <string name="about_source">GitHub-da mənbə kodu</string>
+    <string name="about_privacy">Məxfilik siyasəti</string>
 
     <string name="step_counter">Addım %1$d / %2$d</string>
     <string name="q_destination">Hara getmək istəyirsən?</string>
     <string name="hint_destination">Şəhər və ya ölkə</string>
-    <string name="popular_title">Populyar</string>
-    <string name="about_cappadocia">Hava şarları və pəri bacaları</string>
-    <string name="about_rome">Tarix və makaron</string>
-    <string name="about_paris">İncəsənət və kafelər</string>
-    <string name="about_tokyo">Neon və küçə yeməkləri</string>
-    <string name="about_barcelona">Qaudi və çimərliklər</string>
-    <string name="about_dubai">Səhra və göydələnlər</string>
-    <string name="place_cappadocia">Kappadokiya</string>
-    <string name="place_rome">Roma</string>
-    <string name="place_paris">Paris</string>
-    <string name="place_tokyo">Tokio</string>
-    <string name="place_barcelona">Barselona</string>
-    <string name="place_dubai">Dubay</string>
     <string name="q_days">Neçə gün qalacaqsan?</string>
     <plurals name="days">
         <item quantity="one">%d gün</item>
@@ -59,38 +46,39 @@
     <string name="interest_beach">Çimərlik</string>
     <string name="interest_adventure">Macəra</string>
     <string name="hint_notes">Başqa istəyin var? (məcburi deyil)</string>
-    <string name="q_pace">Necə bir temp istəyirsən?</string>
-    <string name="pace_relaxed">Sakit</string>
-    <string name="pace_balanced">Balanslı</string>
-    <string name="pace_packed">Sıx</string>
     <string name="action_back">Geri</string>
     <string name="action_next">İrəli</string>
 
     <string name="confirm_title">Plan hazırlansın?</string>
-    <string name="confirm_body">Təsdiqlədikdə cavabların süni intellekt üçün prompta çevrilir, o da planı JSON formatında qaytarır.</string>
     <string name="label_destination">Hara</string>
     <string name="label_days">Müddət</string>
+    <string name="when_title">Nə vaxt gedirsən?</string>
+    <string name="when_unknown">Hələ bəlli deyil</string>
+    <string name="label_when">Nə vaxt</string>
+    <string name="days_weekend">Həftə sonu</string>
+    <string name="days_week">1 həftə</string>
+    <string name="days_two_weeks">2 həftə</string>
     <string name="label_companions">Kiminlə</string>
     <string name="label_budget">Büdcə</string>
     <string name="label_interests">Maraqlar</string>
     <string name="label_notes">Qeydlər</string>
-    <string name="label_pace">Temp</string>
     <string name="interests_none">Fərqi yoxdur</string>
-    <string name="show_prompt">Promptu göstər</string>
-    <string name="hide_prompt">Promptu gizlət</string>
     <string name="action_edit">Redaktə et</string>
     <string name="action_plan">Bəli, planla</string>
 
-    <string name="loading_title">Planın hazırlanır…</string>
-    <string name="loading_body">Süni intellekt səyahətini planlaşdırır. Adətən yarım dəqiqə çəkir, modellər məşğul olanda bir az daha uzun.</string>
+    <string name="loading_title">Səyahətin hazırlanır</string>
+    <string name="loading_step_1">Marşrut çəkilir…</string>
+    <string name="loading_step_2">Görməli yerlər seçilir…</string>
+    <string name="loading_step_3">Günlər planlaşdırılır…</string>
+    <string name="loading_step_4">Büdcə hesablanır…</string>
     <string name="action_cancel">Ləğv et</string>
 
     <string name="budget_estimate">Təxmini büdcə: %1$s</string>
     <string name="day_title">Gün %1$d · %2$s</string>
+    <string name="day_tab">%1$d. gün</string>
     <string name="tips_title">Məsləhətlər</string>
-    <string name="show_json">JSON-u göstər</string>
-    <string name="hide_json">JSON-u gizlət</string>
     <string name="action_new_plan">Yeni plan</string>
+    <string name="action_share">Paylaş</string>
 
     <string name="error_title">Plan yaradıla bilmədi</string>
     <string name="error_api_key">Süni intellekt xidməti bu tətbiq üçün hələ qurulmayıb. Sonra yenidən cəhd et.</string>

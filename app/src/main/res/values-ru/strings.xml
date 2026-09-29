@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">Начать</string>
-    <string name="home_tagline">Спланируй следующую поездку с ИИ</string>
     <string name="cd_profile">Профиль</string>
     <string name="cd_back">Назад</string>
     <string name="profile_title">Профиль</string>
@@ -16,23 +15,11 @@
     <string name="about_version">Версия %1$s</string>
     <string name="about_images">Снимки Земли: NASA</string>
     <string name="about_source">Исходный код на GitHub</string>
+    <string name="about_privacy">Политика конфиденциальности</string>
 
     <string name="step_counter">Шаг %1$d из %2$d</string>
     <string name="q_destination">Куда ты хочешь поехать?</string>
     <string name="hint_destination">Город или страна</string>
-    <string name="popular_title">Популярное</string>
-    <string name="about_cappadocia">Воздушные шары и скалы-столбы</string>
-    <string name="about_rome">История и паста</string>
-    <string name="about_paris">Искусство и кафе</string>
-    <string name="about_tokyo">Неон и уличная еда</string>
-    <string name="about_barcelona">Гауди и пляжи</string>
-    <string name="about_dubai">Пустыня и небоскрёбы</string>
-    <string name="place_cappadocia">Каппадокия</string>
-    <string name="place_rome">Рим</string>
-    <string name="place_paris">Париж</string>
-    <string name="place_tokyo">Токио</string>
-    <string name="place_barcelona">Барселона</string>
-    <string name="place_dubai">Дубай</string>
     <string name="q_days">Сколько дней?</string>
     <plurals name="days">
         <item quantity="one">%d день</item>
@@ -61,38 +48,39 @@
     <string name="interest_beach">Пляжи</string>
     <string name="interest_adventure">Приключения</string>
     <string name="hint_notes">Что-нибудь ещё? (необязательно)</string>
-    <string name="q_pace">Какой темп тебе по душе?</string>
-    <string name="pace_relaxed">Спокойный</string>
-    <string name="pace_balanced">Сбалансированный</string>
-    <string name="pace_packed">Насыщенный</string>
     <string name="action_back">Назад</string>
     <string name="action_next">Далее</string>
 
     <string name="confirm_title">Готов планировать?</string>
-    <string name="confirm_body">Когда ты подтвердишь, ответы превратятся в промпт для ИИ, и он вернёт план в формате JSON.</string>
     <string name="label_destination">Куда</string>
     <string name="label_days">Длительность</string>
+    <string name="when_title">Когда едешь?</string>
+    <string name="when_unknown">Пока не знаю</string>
+    <string name="label_when">Когда</string>
+    <string name="days_weekend">Выходные</string>
+    <string name="days_week">1 неделя</string>
+    <string name="days_two_weeks">2 недели</string>
     <string name="label_companions">С кем</string>
     <string name="label_budget">Бюджет</string>
     <string name="label_interests">Интересы</string>
     <string name="label_notes">Заметки</string>
-    <string name="label_pace">Темп</string>
     <string name="interests_none">Без предпочтений</string>
-    <string name="show_prompt">Показать промпт</string>
-    <string name="hide_prompt">Скрыть промпт</string>
     <string name="action_edit">Изменить</string>
     <string name="action_plan">ОК, спланировать</string>
 
-    <string name="loading_title">Составляем план…</string>
-    <string name="loading_body">ИИ планирует твою поездку. Обычно это занимает около полминуты, дольше, если модели загружены.</string>
+    <string name="loading_title">Готовим твою поездку</string>
+    <string name="loading_step_1">Прокладываем маршрут…</string>
+    <string name="loading_step_2">Выбираем, что посмотреть…</string>
+    <string name="loading_step_3">Распределяем дни…</string>
+    <string name="loading_step_4">Считаем бюджет…</string>
     <string name="action_cancel">Отмена</string>
 
     <string name="budget_estimate">Примерный бюджет: %1$s</string>
     <string name="day_title">День %1$d · %2$s</string>
+    <string name="day_tab">День %1$d</string>
     <string name="tips_title">Советы</string>
-    <string name="show_json">Показать JSON</string>
-    <string name="hide_json">Скрыть JSON</string>
     <string name="action_new_plan">Новый план</string>
+    <string name="action_share">Поделиться</string>
 
     <string name="error_title">Не удалось создать план</string>
     <string name="error_api_key">Сервис ИИ для этого приложения ещё не настроен. Повторите попытку позже.</string>

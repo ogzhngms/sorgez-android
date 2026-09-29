@@ -2,6 +2,7 @@ package com.ogzhngms.sorgez
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class PlacesTest {
@@ -27,5 +28,16 @@ class PlacesTest {
         assertNull(findPlace("Atlantis"))
         assertNull(findPlace(""))
         assertNull(findPlace("   "))
+    }
+
+    @Test
+    fun suggestionsMatchTheStartOfANameOncePerPlace() {
+        val ro = suggestPlaces("ro")
+        assertTrue(ro.toString(), "Roma" in ro && "Romanya" in ro)
+        assertTrue(ro.toString(), "Rome" !in ro)
+        assertEquals("Roma", suggestPlaces("ROM").first())
+        assertTrue("New York" in suggestPlaces("york"))
+        assertTrue(suggestPlaces("  ").isEmpty())
+        assertTrue(suggestPlaces("atlantis").isEmpty())
     }
 }

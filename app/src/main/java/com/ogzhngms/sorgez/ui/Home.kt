@@ -108,12 +108,6 @@ internal fun HomeScreen(onStart: () -> Unit, onProfile: () -> Unit) {
                 )
             }
         }
-        Text(
-            stringResource(R.string.home_tagline),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.align(Alignment.BottomCenter).padding(start = 24.dp, end = 24.dp, bottom = 48.dp),
-        )
     }
 }
 
@@ -229,11 +223,15 @@ internal fun ProfileScreen(
             TextButton(onClick = { openLink.openUri(SOURCE_URL) }, contentPadding = PaddingValues(0.dp)) {
                 Text(stringResource(R.string.about_source))
             }
+            TextButton(onClick = { openLink.openUri(PRIVACY_URL) }, contentPadding = PaddingValues(0.dp)) {
+                Text(stringResource(R.string.about_privacy))
+            }
         }
     }
 }
 
 private const val SOURCE_URL = "https://github.com/ogzhngms/sorgez-android"
+private const val PRIVACY_URL = "https://ogzhngms.github.io/sorgez/privacy.html"
 
 // One button showing the current choice; it opens the full list with a short mark and a name for each option.
 @Composable

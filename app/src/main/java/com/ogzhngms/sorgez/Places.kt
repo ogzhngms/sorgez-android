@@ -6,11 +6,17 @@ import java.util.Locale
 // A point on the globe in degrees, north and east positive.
 class Place(val lat: Float, val lon: Float)
 
-private fun p(lat: Double, lon: Double, vararg names: String) = names.map { normalize(it) to Place(lat.toFloat(), lon.toFloat()) }
+// A name as written, its lookup key, and the place it points at.
+private class Named(val name: String, val key: String, val place: Place)
+
+private fun p(lat: Double, lon: Double, vararg names: String): List<Named> {
+    val place = Place(lat.toFloat(), lon.toFloat())
+    return names.map { Named(it, normalize(it), place) }
+}
 
 // Popular cities and countries by their English, Turkish and local names; the destination step's globe
 // flies to them. ponytail: a fixed offline list, swap for a geocoding API if unknown places matter.
-private val PLACES: Map<String, Place> = listOf(
+private val NAMES: List<Named> = listOf(
     // Turkey
     p(41.01, 28.98, "İstanbul", "Istanbul", "Стамбул", "イスタンブール", "伊斯坦布尔", "이스탄불", "إسطنبول"),
     p(39.93, 32.86, "Ankara"), p(38.42, 27.14, "İzmir", "Izmir"), p(36.90, 30.70, "Antalya"),
@@ -112,7 +118,9 @@ private val PLACES: Map<String, Place> = listOf(
     p(4.60, -74.30, "Kolombiya", "Colombia"),
     p(-33.87, 151.21, "Sidney", "Sydney"), p(-37.81, 144.96, "Melbourne"), p(-25.30, 133.80, "Avustralya", "Australia"),
     p(-36.85, 174.76, "Auckland"), p(-45.03, 168.66, "Queenstown"), p(-41.50, 172.80, "Yeni Zelanda", "New Zealand"),
-).flatten().toMap()
+).flatten()
+
+private val PLACES: Map<String, Place> = NAMES.associate { it.key to it.place }
 
 // Lower case without accents, so "İSTANBUL", "istanbul" and "Istanbul" are one key.
 internal fun normalize(text: String): String =
@@ -133,4 +141,18 @@ fun findPlace(text: String): Place? {
         }
     }
     return null
+}
+
+// Names that start with what was typed, or have a word that does, one per place, whole-name matches
+// first, so "ro" offers Roma, Romanya, Rotterdam... in list order.
+fun suggestPlaces(text: String, limit: Int = 6): List<String> {
+    val query = normalize(text)
+    if (query.isEmpty()) return emptyList()
+    val seen = HashSet<Place>()
+    return NAMES
+        .filter { it.key.startsWith(query) || it.key.contains(" $query") }
+        .sortedBy { if (it.key.startsWith(query)) 0 else 1 }
+        .filter { seen.add(it.place) }
+        .take(limit)
+        .map { it.name }
 }

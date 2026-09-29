@@ -1,11 +1,18 @@
 package com.ogzhngms.sorgez.ui
 
+import android.content.Context
+import android.content.Intent
 import androidx.activity.compose.BackHandler
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -14,10 +21,14 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.snapping.SnapPosition
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -29,41 +40,55 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -74,23 +99,25 @@ import androidx.core.view.WindowInsetsCompat
 import com.ogzhngms.sorgez.AppSettings
 import com.ogzhngms.sorgez.Budget
 import com.ogzhngms.sorgez.Companions
-import com.ogzhngms.sorgez.Currency
 import com.ogzhngms.sorgez.Day
 import com.ogzhngms.sorgez.Interest
 import com.ogzhngms.sorgez.Itinerary
 import com.ogzhngms.sorgez.Language
 import com.ogzhngms.sorgez.MAX_DAYS
-import com.ogzhngms.sorgez.Pace
 import com.ogzhngms.sorgez.QUESTIONS
 import com.ogzhngms.sorgez.R
 import com.ogzhngms.sorgez.Screen
 import com.ogzhngms.sorgez.TripAnswers
 import com.ogzhngms.sorgez.TripViewModel
-import com.ogzhngms.sorgez.buildPrompt
 import com.ogzhngms.sorgez.findPlace
-import com.ogzhngms.sorgez.promptLanguage
+import com.ogzhngms.sorgez.normalize
+import com.ogzhngms.sorgez.suggestPlaces
+import java.time.Month
+import java.time.format.TextStyle
 import java.util.Locale
-import org.json.JSONObject
+import kotlin.math.abs
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 
 @Composable
 fun SorGezApp(vm: TripViewModel, onLanguageChange: (Language) -> Unit = {}) {
@@ -119,8 +146,8 @@ fun SorGezApp(vm: TripViewModel, onLanguageChange: (Language) -> Unit = {}) {
                         onBack = vm::back,
                     )
                     is Screen.Question -> QuestionScreen(screen.step, vm.answers, vm::update, vm::next, back)
-                    Screen.Confirm -> ConfirmScreen(vm.answers, currency, onPlan = vm::submit, onEdit = vm::back)
-                    Screen.Loading -> LoadingScreen(onCancel = vm::back)
+                    Screen.Confirm -> ConfirmScreen(vm.answers, onPlan = vm::submit, onEdit = vm::back, onEditStep = vm::edit)
+                    Screen.Loading -> LoadingScreen(vm.answers.destination, onCancel = vm::back)
                     is Screen.Result -> ResultScreen(screen, onNewPlan = vm::restart)
                     is Screen.Failed -> FailedScreen(screen, onRetry = vm::submit, onEdit = vm::back)
                 }
@@ -168,15 +195,20 @@ private fun QuestionScreen(
             DestinationStep(answers.destination, { value -> onUpdate { it.copy(destination = value) } }, onNext, Modifier.weight(1f))
         } else Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
             when (step) {
-                1 -> DayPicker(answers.days) { days -> onUpdate { it.copy(days = days) } }
-                2 -> Choices(Companions.entries, { it == answers.companions }, { stringResource(it.label) }) { choice ->
+                1 -> DaysStep(
+                    answers.days,
+                    answers.month,
+                    onDays = { days -> onUpdate { it.copy(days = days) } },
+                    onMonth = { month -> onUpdate { it.copy(month = month) } },
+                )
+                2 -> IconChoices(Companions.entries, { it == answers.companions }, { it.label }, { it.icon }) { choice ->
                     onUpdate { it.copy(companions = choice) }
                 }
-                3 -> Choices(Budget.entries, { it == answers.budget }, { stringResource(it.label) }) { choice ->
+                3 -> IconChoices(Budget.entries, { it == answers.budget }, { it.label }, { it.icon }, columns = 3) { choice ->
                     onUpdate { it.copy(budget = choice) }
                 }
                 4 -> {
-                    Choices(Interest.entries, { it in answers.interests }, { stringResource(it.label) }) { choice ->
+                    IconChoices(Interest.entries, { it in answers.interests }, { it.label }, { it.icon }, compact = true) { choice ->
                         onUpdate { it.copy(interests = if (choice in it.interests) it.interests - choice else it.interests + choice) }
                     }
                     Spacer(Modifier.height(20.dp))
@@ -186,9 +218,6 @@ private fun QuestionScreen(
                         label = { Text(stringResource(R.string.hint_notes)) },
                         modifier = Modifier.fillMaxWidth(),
                     )
-                }
-                5 -> Choices(Pace.entries, { it == answers.pace }, { stringResource(it.label) }) { choice ->
-                    onUpdate { it.copy(pace = choice) }
                 }
             }
         }
@@ -203,17 +232,33 @@ private fun QuestionScreen(
     }
 }
 
+// The length large between − and +, tiles for the usual lengths, then the month of travel.
+@Composable
+private fun DaysStep(days: Int, month: Int?, onDays: (Int) -> Unit, onMonth: (Int?) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+        DayPicker(days, onDays)
+        DayTiles(days, onDays)
+        Spacer(Modifier.height(4.dp))
+        Text(stringResource(R.string.when_title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+        MonthPicker(month, onMonth)
+    }
+}
+
 @Composable
 private fun DayPicker(days: Int, onChange: (Int) -> Unit) {
     val fewer = stringResource(R.string.cd_fewer_days)
     val more = stringResource(R.string.cd_more_days)
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(24.dp)) {
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
         FilledTonalButton(
             onClick = { onChange(days - 1) },
             enabled = days > 1,
             modifier = Modifier.semantics { contentDescription = fewer },
         ) { Text("−", style = MaterialTheme.typography.titleLarge) }
-        Text(pluralStringResource(R.plurals.days, days, days), style = MaterialTheme.typography.headlineSmall)
+        Text(
+            pluralStringResource(R.plurals.days, days, days),
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Bold,
+        )
         FilledTonalButton(
             onClick = { onChange(days + 1) },
             enabled = days < MAX_DAYS,
@@ -222,9 +267,117 @@ private fun DayPicker(days: Int, onChange: (Int) -> Unit) {
     }
 }
 
-// Empty, it offers popular places; once something is typed, the Earth flies to it and drops a pin.
+// A length and, for the ones people name, that name: "Weekend" over "2 days".
+private class Length(val days: Int, @StringRes val name: Int?)
+
+private val LENGTHS = listOf(
+    Length(2, R.string.days_weekend),
+    Length(3, null),
+    Length(5, null),
+    Length(7, R.string.days_week),
+    Length(10, null),
+    Length(14, R.string.days_two_weeks),
+)
+
+@Composable
+private fun DayTiles(days: Int, onPick: (Int) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        LENGTHS.chunked(3).forEach { row ->
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                row.forEach { length ->
+                    val count = pluralStringResource(R.plurals.days, length.days, length.days)
+                    SelectTile(length.days == days, { onPick(length.days) }, Modifier.weight(1f).height(64.dp)) { color ->
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(length.name?.let { stringResource(it) } ?: count, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = color)
+                            if (length.name != null) {
+                                Text(count, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// An iOS-style wheel: "Not sure yet", then January to December; whatever settles in the middle band is picked.
+// A tap on a row turns the wheel to it.
+@Composable
+private fun MonthPicker(month: Int?, onPick: (Int?) -> Unit) {
+    val locale = Locale.getDefault()
+    val options = remember { listOf<Int?>(null) + (1..12) }
+    val state = rememberLazyListState(initialFirstVisibleItemIndex = options.indexOf(month).coerceAtLeast(0))
+    val scope = rememberCoroutineScope()
+    val centred by remember {
+        derivedStateOf {
+            val info = state.layoutInfo
+            val middle = (info.viewportStartOffset + info.viewportEndOffset) / 2
+            info.visibleItemsInfo.minByOrNull { abs(it.offset + it.size / 2 - middle) }?.index ?: 0
+        }
+    }
+    LaunchedEffect(state) {
+        snapshotFlow { state.isScrollInProgress to centred }
+            .filter { (scrolling, _) -> !scrolling }
+            .collect { (_, index) -> if (options[index] != month) onPick(options[index]) }
+    }
+    val colors = MaterialTheme.colorScheme
+    Box(Modifier.fillMaxWidth().height(WHEEL_ROW * WHEEL_ROWS), contentAlignment = Alignment.Center) {
+        Box(Modifier.fillMaxWidth().height(WHEEL_ROW).background(colors.primary.copy(alpha = 0.14f), MaterialTheme.shapes.medium))
+        LazyColumn(
+            state = state,
+            flingBehavior = rememberSnapFlingBehavior(state, SnapPosition.Center),
+            contentPadding = PaddingValues(vertical = WHEEL_ROW * (WHEEL_ROWS / 2)),
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            itemsIndexed(options) { index, option ->
+                val distance = abs(index - centred)
+                Box(
+                    Modifier.fillMaxWidth().height(WHEEL_ROW).clickable { scope.launch { state.animateScrollToItem(index) } },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        option?.let { monthName(it, locale) } ?: stringResource(R.string.when_unknown),
+                        style = if (distance == 0) MaterialTheme.typography.titleMedium else MaterialTheme.typography.bodyLarge,
+                        fontWeight = if (distance == 0) FontWeight.Bold else FontWeight.Normal,
+                        color = if (distance == 0) colors.primary else colors.onSurfaceVariant.copy(alpha = if (distance == 1) 0.7f else 0.35f),
+                    )
+                }
+            }
+        }
+    }
+}
+
+private val WHEEL_ROW = 40.dp
+private const val WHEEL_ROWS = 5
+
+internal fun monthName(month: Int, locale: Locale): String =
+    Month.of(month).getDisplayName(TextStyle.FULL_STANDALONE, locale).replaceFirstChar { it.titlecase(locale) }
+
+// An outlined tile, green-tinted when chosen, like the icon tiles; the content gets the text colour to use.
+@Composable
+private fun SelectTile(chosen: Boolean, onClick: () -> Unit, modifier: Modifier, content: @Composable (Color) -> Unit) {
+    val colors = MaterialTheme.colorScheme
+    OutlinedCard(
+        onClick = onClick,
+        modifier = modifier.semantics { selected = chosen },
+        colors = CardDefaults.outlinedCardColors(containerColor = if (chosen) colors.primary.copy(alpha = 0.14f) else colors.surface),
+        border = BorderStroke(if (chosen) 2.dp else 1.dp, if (chosen) colors.primary else colors.outlineVariant),
+    ) {
+        Box(Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
+            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) { content(if (chosen) colors.primary else colors.onSurface) }
+        }
+    }
+}
+
+// The Earth spins under the field; typing offers matching places below it, and the Earth flies to
+// whatever is written and drops a pin. Picking a suggestion fills the field and closes the list.
 @Composable
 private fun DestinationStep(destination: String, onChange: (String) -> Unit, onNext: () -> Unit, modifier: Modifier) {
+    val focusManager = LocalFocusManager.current
+    val place = remember(destination) { findPlace(destination) }
+    val suggestions = remember(destination) {
+        suggestPlaces(destination).takeUnless { names -> names.any { normalize(it) == normalize(destination) } }.orEmpty()
+    }
     Column(modifier) {
         OutlinedTextField(
             value = destination,
@@ -235,44 +388,19 @@ private fun DestinationStep(destination: String, onChange: (String) -> Unit, onN
             keyboardActions = KeyboardActions(onNext = { onNext() }),
             modifier = Modifier.fillMaxWidth(),
         )
-        Spacer(Modifier.height(16.dp))
-        Crossfade(destination.isBlank(), Modifier.weight(1f), label = "destination") { empty ->
-            if (empty) {
-                PopularPlaces(onChange)
-            } else {
-                val place = remember(destination) { findPlace(destination) }
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    DestinationEarth(place, Modifier.aspectRatio(1f, matchHeightConstraintsFirst = true))
-                }
-            }
-        }
-    }
-}
-
-private class Popular(val flag: String, @StringRes val name: Int, @StringRes val about: Int)
-
-private val POPULAR = listOf(
-    Popular("🇹🇷", R.string.place_cappadocia, R.string.about_cappadocia),
-    Popular("🇮🇹", R.string.place_rome, R.string.about_rome),
-    Popular("🇫🇷", R.string.place_paris, R.string.about_paris),
-    Popular("🇯🇵", R.string.place_tokyo, R.string.about_tokyo),
-    Popular("🇪🇸", R.string.place_barcelona, R.string.about_barcelona),
-    Popular("🇦🇪", R.string.place_dubai, R.string.about_dubai),
-)
-
-@Composable
-private fun PopularPlaces(onPick: (String) -> Unit) {
-    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text(stringResource(R.string.popular_title), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        POPULAR.chunked(2).forEach { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.height(IntrinsicSize.Min)) {
-                row.forEach { place ->
-                    val name = stringResource(place.name)
-                    Card(onClick = { onPick(name) }, modifier = Modifier.weight(1f).fillMaxHeight()) {
-                        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text("${place.flag}  $name", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
-                            Text(stringResource(place.about), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        }
+        Box(Modifier.weight(1f).fillMaxWidth().padding(top = 8.dp)) {
+            DestinationEarth(place, Modifier.align(Alignment.Center).aspectRatio(1f, matchHeightConstraintsFirst = true))
+            if (suggestions.isNotEmpty()) {
+                Card(Modifier.fillMaxWidth()) {
+                    suggestions.forEach { name ->
+                        Text(
+                            name,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onChange(name); focusManager.clearFocus() }
+                                .padding(horizontal = 16.dp, vertical = 14.dp),
+                        )
                     }
                 }
             }
@@ -280,95 +408,168 @@ private fun PopularPlaces(onPick: (String) -> Unit) {
     }
 }
 
+// Large tiles, two to a row unless told otherwise, each an icon over its label; the chosen one is outlined and tinted green.
+// Compact tiles put the icon beside the label, for longer lists.
 @Composable
-private fun <T> Choices(options: List<T>, selected: (T) -> Boolean, label: @Composable (T) -> String, onClick: (T) -> Unit) {
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        options.forEach { option ->
-            FilterChip(
-                selected = selected(option),
-                onClick = { onClick(option) },
-                label = { Text(label(option)) },
-            )
+private fun <T> IconChoices(
+    options: List<T>,
+    selected: (T) -> Boolean,
+    @StringRes label: (T) -> Int,
+    @DrawableRes icon: (T) -> Int,
+    columns: Int = 2,
+    compact: Boolean = false,
+    onClick: (T) -> Unit,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        options.chunked(columns).forEach { row ->
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                row.forEach { option ->
+                    val chosen = selected(option)
+                    val colors = MaterialTheme.colorScheme
+                    OutlinedCard(
+                        onClick = { onClick(option) },
+                        modifier = Modifier.weight(1f).height(if (compact) 60.dp else 128.dp).semantics { this.selected = chosen },
+                        colors = CardDefaults.outlinedCardColors(
+                            containerColor = if (chosen) colors.primary.copy(alpha = 0.14f) else colors.surface,
+                        ),
+                        border = BorderStroke(if (chosen) 2.dp else 1.dp, if (chosen) colors.primary else colors.outlineVariant),
+                    ) {
+                        val tint = if (chosen) colors.primary else colors.onSurfaceVariant
+                        val text = @Composable {
+                            Text(
+                                stringResource(label(option)),
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = if (chosen) FontWeight.Bold else FontWeight.Medium,
+                                color = if (chosen) colors.primary else colors.onSurface,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+                        if (compact) {
+                            Row(Modifier.fillMaxSize().padding(horizontal = 14.dp), verticalAlignment = Alignment.CenterVertically) {
+                                Icon(painterResource(icon(option)), contentDescription = null, tint = tint, modifier = Modifier.size(24.dp))
+                                Spacer(Modifier.width(12.dp))
+                                text()
+                            }
+                        } else {
+                            Column(
+                                Modifier.fillMaxSize().padding(horizontal = 8.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically),
+                            ) {
+                                Icon(painterResource(icon(option)), contentDescription = null, tint = tint, modifier = Modifier.size(40.dp))
+                                text()
+                            }
+                        }
+                    }
+                }
+                repeat(columns - row.size) { Spacer(Modifier.weight(1f)) }
+            }
         }
     }
 }
 
 @Composable
-private fun ConfirmScreen(answers: TripAnswers, currency: Currency, onPlan: () -> Unit, onEdit: () -> Unit) {
-    var showPrompt by rememberSaveable { mutableStateOf(false) }
+// The space under the summary is left free on purpose: it is kept for an ad.
+private fun ConfirmScreen(answers: TripAnswers, onPlan: () -> Unit, onEdit: () -> Unit, onEditStep: (Int) -> Unit) {
     Column(Modifier.fillMaxSize().padding(24.dp)) {
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Text(stringResource(R.string.confirm_title), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+            // Each row opens its question; Next there comes straight back here.
             Card(Modifier.fillMaxWidth()) {
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Summary(R.string.label_destination, answers.destination.trim())
-                    Summary(R.string.label_days, pluralStringResource(R.plurals.days, answers.days, answers.days))
-                    Summary(R.string.label_companions, stringResource(answers.companions.label))
-                    Summary(R.string.label_budget, stringResource(answers.budget.label))
+                Column(Modifier.padding(vertical = 6.dp)) {
+                    Summary(R.string.label_destination, answers.destination.trim()) { onEditStep(0) }
+                    Summary(R.string.label_days, pluralStringResource(R.plurals.days, answers.days, answers.days)) { onEditStep(1) }
+                    answers.month?.let { Summary(R.string.label_when, monthName(it, Locale.getDefault())) { onEditStep(1) } }
+                    Summary(R.string.label_companions, stringResource(answers.companions.label)) { onEditStep(2) }
+                    Summary(R.string.label_budget, stringResource(answers.budget.label)) { onEditStep(3) }
                     Summary(
                         R.string.label_interests,
                         answers.interests.sorted().map { stringResource(it.label) }.joinToString()
                             .ifEmpty { stringResource(R.string.interests_none) },
-                    )
-                    if (answers.notes.isNotBlank()) Summary(R.string.label_notes, answers.notes.trim())
-                    Summary(R.string.label_pace, stringResource(answers.pace.label))
+                    ) { onEditStep(4) }
+                    if (answers.notes.isNotBlank()) Summary(R.string.label_notes, answers.notes.trim()) { onEditStep(4) }
                 }
             }
-            Text(stringResource(R.string.confirm_body), color = MaterialTheme.colorScheme.onSurfaceVariant)
-            TextButton(onClick = { showPrompt = !showPrompt }) {
-                Text(stringResource(if (showPrompt) R.string.hide_prompt else R.string.show_prompt))
-            }
-            if (showPrompt) Code(buildPrompt(answers, promptLanguage(), currency))
         }
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            OutlinedButton(onClick = onEdit, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.action_edit)) }
+            OutlinedButton(onClick = onEdit, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.action_back)) }
             Button(onClick = onPlan, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.action_plan)) }
         }
     }
 }
 
 @Composable
-private fun Summary(@StringRes label: Int, value: String) {
-    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+private fun Summary(@StringRes label: Int, value: String, onClick: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().clickable(onClickLabel = stringResource(R.string.action_edit), onClick = onClick).padding(horizontal = 16.dp, vertical = 10.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         Text(stringResource(label), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.width(110.dp))
         Text(value, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
+        Icon(
+            painterResource(R.drawable.ic_edit),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+            modifier = Modifier.size(16.dp),
+        )
     }
 }
 
 @Composable
-private fun LoadingScreen(onCancel: () -> Unit) {
+// While the plan is written, the Earth flies to the destination and zooms in, as on the first question.
+private fun LoadingScreen(destination: String, onCancel: () -> Unit) {
+    val place = remember(destination) { findPlace(destination) }
     Column(
         Modifier.fillMaxSize().padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        CircularProgressIndicator()
+        DestinationEarth(place, Modifier.fillMaxWidth(0.8f))
+        LinearProgressIndicator(Modifier.fillMaxWidth(0.5f))
         Spacer(Modifier.height(24.dp))
-        Text(stringResource(R.string.loading_title), style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
-        Spacer(Modifier.height(8.dp))
         Text(
-            stringResource(R.string.loading_body),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            stringResource(R.string.loading_title),
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center,
         )
+        Spacer(Modifier.height(8.dp))
+        // What is being worked on, a new line every few seconds; an infinite transition so UI tests can settle.
+        val step by rememberInfiniteTransition(label = "steps").animateFloat(
+            initialValue = 0f,
+            targetValue = LOADING_STEPS.size.toFloat(),
+            animationSpec = infiniteRepeatable(tween(LOADING_STEPS.size * 2_800, easing = LinearEasing)),
+            label = "steps",
+        )
+        Crossfade(step.toInt().coerceAtMost(LOADING_STEPS.lastIndex), label = "step") { index ->
+            Text(
+                stringResource(LOADING_STEPS[index]),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
         Spacer(Modifier.height(24.dp))
         TextButton(onClick = onCancel) { Text(stringResource(R.string.action_cancel)) }
     }
 }
 
+private val LOADING_STEPS = listOf(R.string.loading_step_1, R.string.loading_step_2, R.string.loading_step_3, R.string.loading_step_4)
+
+// The plan as pages: a header with the title and budget, a tab per day plus one for tips, swiped sideways,
+// and Share and New plan always in reach at the bottom.
 @Composable
 private fun ResultScreen(result: Screen.Result, onNewPlan: () -> Unit) {
     val itinerary = result.itinerary
-    var showJson by rememberSaveable { mutableStateOf(false) }
-    LazyColumn(
-        Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        item {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(itinerary.title, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
-                Text(itinerary.summary, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    val context = LocalContext.current
+    val pager = rememberPagerState { itinerary.days.size + 1 }
+    val scope = rememberCoroutineScope()
+    Column(Modifier.fillMaxSize()) {
+        Column(Modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(itinerary.title, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Icon(painterResource(R.drawable.ic_money_mid), contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
                 Text(
                     stringResource(R.string.budget_estimate, itinerary.estimatedBudget),
                     style = MaterialTheme.typography.labelLarge,
@@ -376,56 +577,113 @@ private fun ResultScreen(result: Screen.Result, onNewPlan: () -> Unit) {
                 )
             }
         }
-        items(itinerary.days) { day -> DayCard(day) }
-        item {
-            Card(Modifier.fillMaxWidth()) {
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(stringResource(R.string.tips_title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    itinerary.tips.forEach { Text("• $it", color = MaterialTheme.colorScheme.onSurfaceVariant) }
-                }
+        PrimaryScrollableTabRow(selectedTabIndex = pager.currentPage, edgePadding = 24.dp, containerColor = Color.Transparent) {
+            itinerary.days.forEachIndexed { index, day ->
+                Tab(
+                    selected = pager.currentPage == index,
+                    onClick = { scope.launch { pager.animateScrollToPage(index) } },
+                    text = { Text(stringResource(R.string.day_tab, day.day)) },
+                )
             }
+            Tab(
+                selected = pager.currentPage == itinerary.days.size,
+                onClick = { scope.launch { pager.animateScrollToPage(itinerary.days.size) } },
+                text = { Text(stringResource(R.string.tips_title)) },
+            )
         }
-        item {
-            Column {
-                TextButton(onClick = { showJson = !showJson }) {
-                    Text(stringResource(if (showJson) R.string.hide_json else R.string.show_json))
-                }
-                if (showJson) Code(remember(result.json) { JSONObject(result.json).toString(2) })
+        HorizontalPager(pager, Modifier.weight(1f)) { page ->
+            if (page < itinerary.days.size) DayPage(itinerary.days[page]) else TipsPage(itinerary.tips)
+        }
+        Row(Modifier.padding(horizontal = 24.dp, vertical = 12.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            OutlinedButton(onClick = { share(context, itinerary) }, modifier = Modifier.weight(1f)) {
+                Icon(painterResource(R.drawable.ic_share), contentDescription = null, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(8.dp))
+                Text(stringResource(R.string.action_share))
             }
-        }
-        item {
-            Button(onClick = onNewPlan, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_new_plan)) }
+            Button(onClick = onNewPlan, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.action_new_plan)) }
         }
     }
 }
 
+// One day as a timeline: a sun or moon by the time of day, joined by a line, with the activity beside it.
 @Composable
-private fun DayCard(day: Day) {
-    Card(Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Text(
-                stringResource(R.string.day_title, day.day, day.title),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-            )
-            day.activities.forEach { activity ->
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text(
-                        activity.time,
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.width(48.dp),
-                    )
-                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        Text(activity.title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
-                        Text(activity.description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Text(activity.cost, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.tertiary)
+private fun DayPage(day: Day) {
+    LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(24.dp)) {
+        item {
+            Text(day.title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(20.dp))
+        }
+        itemsIndexed(day.activities) { index, activity ->
+            Row(Modifier.height(IntrinsicSize.Min)) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Surface(shape = CircleShape, color = MaterialTheme.colorScheme.primary.copy(alpha = 0.14f), modifier = Modifier.size(36.dp)) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                painterResource(if (isEvening(activity.time)) R.drawable.ic_moon else R.drawable.ic_sun),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(18.dp),
+                            )
+                        }
+                    }
+                    if (index < day.activities.lastIndex) {
+                        Box(Modifier.width(2.dp).fillMaxHeight().background(MaterialTheme.colorScheme.outlineVariant))
+                    }
+                }
+                Spacer(Modifier.width(16.dp))
+                Column(Modifier.weight(1f).padding(bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(activity.time, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
+                    Text(activity.title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                    Text(activity.description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Surface(shape = MaterialTheme.shapes.small, color = MaterialTheme.colorScheme.surfaceVariant) {
+                        Text(
+                            activity.cost,
+                            style = MaterialTheme.typography.labelMedium,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                        )
                     }
                 }
             }
         }
     }
+}
+
+// From five in the afternoon, and before five in the morning, an activity gets the moon.
+private fun isEvening(time: String): Boolean = time.substringBefore(':').toIntOrNull()?.let { it >= 17 || it < 5 } == true
+
+@Composable
+private fun TipsPage(tips: List<String>) {
+    LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        items(tips) { tip ->
+            Card(Modifier.fillMaxWidth()) {
+                Row(Modifier.padding(16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Icon(painterResource(R.drawable.ic_tip), contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                    Text(tip, style = MaterialTheme.typography.bodyMedium)
+                }
+            }
+        }
+    }
+}
+
+// The plan as plain text for the share sheet, laid out like the screen: title, budget, days, tips.
+private fun share(context: Context, itinerary: Itinerary) {
+    val text = buildString {
+        appendLine(itinerary.title)
+        appendLine(itinerary.summary)
+        appendLine(context.getString(R.string.budget_estimate, itinerary.estimatedBudget))
+        itinerary.days.forEach { day ->
+            appendLine()
+            appendLine(context.getString(R.string.day_title, day.day, day.title))
+            day.activities.forEach { appendLine("${it.time}  ${it.title} (${it.cost})") }
+        }
+        if (itinerary.tips.isNotEmpty()) {
+            appendLine()
+            appendLine(context.getString(R.string.tips_title))
+            itinerary.tips.forEach { appendLine("• $it") }
+        }
+    }.trim()
+    val send = Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_SUBJECT, itinerary.title).putExtra(Intent.EXTRA_TEXT, text)
+    context.startActivity(Intent.createChooser(send, context.getString(R.string.action_share)))
 }
 
 @Composable
@@ -442,12 +700,5 @@ private fun FailedScreen(failed: Screen.Failed, onRetry: () -> Unit, onEdit: () 
         Spacer(Modifier.height(12.dp))
         Button(onClick = onRetry, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_retry)) }
         OutlinedButton(onClick = onEdit, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_edit)) }
-    }
-}
-
-@Composable
-private fun Code(text: String) {
-    Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = MaterialTheme.shapes.small) {
-        Text(text, fontFamily = FontFamily.Monospace, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(12.dp))
     }
 }

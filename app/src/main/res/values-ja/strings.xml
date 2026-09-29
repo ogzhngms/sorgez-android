@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">はじめる</string>
-    <string name="home_tagline">AI で次の旅行を計画しよう</string>
     <string name="cd_profile">プロフィール</string>
     <string name="cd_back">戻る</string>
     <string name="profile_title">プロフィール</string>
@@ -16,23 +15,11 @@
     <string name="about_version">バージョン %1$s</string>
     <string name="about_images">地球の画像：NASA</string>
     <string name="about_source">GitHub のソースコード</string>
+    <string name="about_privacy">プライバシーポリシー</string>
 
     <string name="step_counter">ステップ %1$d / %2$d</string>
     <string name="q_destination">どこへ行きたいですか？</string>
     <string name="hint_destination">都市または国</string>
-    <string name="popular_title">人気</string>
-    <string name="about_cappadocia">気球と妖精の煙突</string>
-    <string name="about_rome">歴史とパスタ</string>
-    <string name="about_paris">アートとカフェ</string>
-    <string name="about_tokyo">ネオンと屋台グルメ</string>
-    <string name="about_barcelona">ガウディとビーチ</string>
-    <string name="about_dubai">砂漠と超高層ビル</string>
-    <string name="place_cappadocia">カッパドキア</string>
-    <string name="place_rome">ローマ</string>
-    <string name="place_paris">パリ</string>
-    <string name="place_tokyo">東京</string>
-    <string name="place_barcelona">バルセロナ</string>
-    <string name="place_dubai">ドバイ</string>
     <string name="q_days">何日間ですか？</string>
     <plurals name="days">
         <item quantity="other">%d日間</item>
@@ -58,38 +45,39 @@
     <string name="interest_beach">ビーチ</string>
     <string name="interest_adventure">アドベンチャー</string>
     <string name="hint_notes">ほかに希望はありますか？（任意）</string>
-    <string name="q_pace">どんなペースが好きですか？</string>
-    <string name="pace_relaxed">ゆったり</string>
-    <string name="pace_balanced">ほどほど</string>
-    <string name="pace_packed">ぎっしり</string>
     <string name="action_back">戻る</string>
     <string name="action_next">次へ</string>
 
     <string name="confirm_title">プランを作成しますか？</string>
-    <string name="confirm_body">確定すると、回答が AI へのプロンプトになり、AI がプランを JSON で返します。</string>
     <string name="label_destination">行き先</string>
     <string name="label_days">期間</string>
+    <string name="when_title">いつ行きますか？</string>
+    <string name="when_unknown">まだ未定</string>
+    <string name="label_when">時期</string>
+    <string name="days_weekend">週末</string>
+    <string name="days_week">1週間</string>
+    <string name="days_two_weeks">2週間</string>
     <string name="label_companions">同行者</string>
     <string name="label_budget">予算</string>
     <string name="label_interests">興味</string>
     <string name="label_notes">メモ</string>
-    <string name="label_pace">ペース</string>
     <string name="interests_none">こだわりなし</string>
-    <string name="show_prompt">プロンプトを表示</string>
-    <string name="hide_prompt">プロンプトを隠す</string>
     <string name="action_edit">編集</string>
     <string name="action_plan">OK、作成する</string>
 
-    <string name="loading_title">プランを作成しています…</string>
-    <string name="loading_body">AI が旅行を計画しています。通常は30秒ほどかかり、モデルが混雑しているときはもう少しかかります。</string>
+    <string name="loading_title">旅行プランを準備しています</string>
+    <string name="loading_step_1">ルートを作成中…</string>
+    <string name="loading_step_2">見どころを選んでいます…</string>
+    <string name="loading_step_3">日程を組んでいます…</string>
+    <string name="loading_step_4">予算を計算中…</string>
     <string name="action_cancel">キャンセル</string>
 
     <string name="budget_estimate">予算の目安：%1$s</string>
     <string name="day_title">%1$d日目 · %2$s</string>
+    <string name="day_tab">%1$d日目</string>
     <string name="tips_title">ヒント</string>
-    <string name="show_json">JSON を表示</string>
-    <string name="hide_json">JSON を隠す</string>
     <string name="action_new_plan">新しいプラン</string>
+    <string name="action_share">共有</string>
 
     <string name="error_title">プランを作成できませんでした</string>
     <string name="error_api_key">このアプリの AI サービスはまだ設定されていません。後でもう一度お試しください。</string>

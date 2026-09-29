@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">शुरू करें</string>
-    <string name="home_tagline">AI के साथ अपनी अगली यात्रा की योजना बनाएँ</string>
     <string name="cd_profile">प्रोफ़ाइल</string>
     <string name="cd_back">वापस</string>
     <string name="profile_title">प्रोफ़ाइल</string>
@@ -16,23 +15,11 @@
     <string name="about_version">संस्करण %1$s</string>
     <string name="about_images">पृथ्वी की तस्वीरें: NASA</string>
     <string name="about_source">GitHub पर सोर्स कोड</string>
+    <string name="about_privacy">गोपनीयता नीति</string>
 
     <string name="step_counter">चरण %1$d / %2$d</string>
     <string name="q_destination">आप कहाँ जाना चाहते हैं?</string>
     <string name="hint_destination">कोई शहर या देश</string>
-    <string name="popular_title">लोकप्रिय</string>
-    <string name="about_cappadocia">गुब्बारे और परी चिमनियाँ</string>
-    <string name="about_rome">इतिहास और पास्ता</string>
-    <string name="about_paris">कला और कैफ़े</string>
-    <string name="about_tokyo">नियॉन और स्ट्रीट फ़ूड</string>
-    <string name="about_barcelona">गौदी और समुद्र तट</string>
-    <string name="about_dubai">रेगिस्तान और गगनचुंबी इमारतें</string>
-    <string name="place_cappadocia">कप्पादोकिया</string>
-    <string name="place_rome">रोम</string>
-    <string name="place_paris">पेरिस</string>
-    <string name="place_tokyo">टोक्यो</string>
-    <string name="place_barcelona">बार्सिलोना</string>
-    <string name="place_dubai">दुबई</string>
     <string name="q_days">कितने दिन?</string>
     <plurals name="days">
         <item quantity="one">%d दिन</item>
@@ -59,38 +46,39 @@
     <string name="interest_beach">समुद्र तट</string>
     <string name="interest_adventure">रोमांच</string>
     <string name="hint_notes">कुछ और? (वैकल्पिक)</string>
-    <string name="q_pace">आपको कैसी रफ़्तार पसंद है?</string>
-    <string name="pace_relaxed">आरामदायक</string>
-    <string name="pace_balanced">संतुलित</string>
-    <string name="pace_packed">व्यस्त</string>
     <string name="action_back">वापस</string>
     <string name="action_next">आगे</string>
 
     <string name="confirm_title">योजना बनाने के लिए तैयार?</string>
-    <string name="confirm_body">पुष्टि करने पर आपके जवाब AI के लिए एक प्रॉम्प्ट बन जाते हैं, जो योजना JSON में लौटाता है।</string>
     <string name="label_destination">गंतव्य</string>
     <string name="label_days">अवधि</string>
+    <string name="when_title">आप कब जा रहे हैं?</string>
+    <string name="when_unknown">अभी तय नहीं</string>
+    <string name="label_when">कब</string>
+    <string name="days_weekend">वीकेंड</string>
+    <string name="days_week">1 हफ़्ता</string>
+    <string name="days_two_weeks">2 हफ़्ते</string>
     <string name="label_companions">साथ में</string>
     <string name="label_budget">बजट</string>
     <string name="label_interests">रुचियाँ</string>
     <string name="label_notes">नोट्स</string>
-    <string name="label_pace">रफ़्तार</string>
     <string name="interests_none">कोई पसंद नहीं</string>
-    <string name="show_prompt">प्रॉम्प्ट दिखाएँ</string>
-    <string name="hide_prompt">प्रॉम्प्ट छिपाएँ</string>
     <string name="action_edit">बदलें</string>
     <string name="action_plan">ठीक है, योजना बनाएँ</string>
 
-    <string name="loading_title">आपकी योजना लिखी जा रही है…</string>
-    <string name="loading_body">AI आपकी यात्रा की योजना बना रहा है। इसमें आमतौर पर आधा मिनट लगता है, मॉडल व्यस्त हों तो थोड़ा ज़्यादा।</string>
+    <string name="loading_title">आपकी यात्रा तैयार हो रही है</string>
+    <string name="loading_step_1">रास्ता बनाया जा रहा है…</string>
+    <string name="loading_step_2">घूमने की जगहें चुनी जा रही हैं…</string>
+    <string name="loading_step_3">दिन तय किए जा रहे हैं…</string>
+    <string name="loading_step_4">बजट का हिसाब लगाया जा रहा है…</string>
     <string name="action_cancel">रद्द करें</string>
 
     <string name="budget_estimate">अनुमानित बजट: %1$s</string>
     <string name="day_title">दिन %1$d · %2$s</string>
+    <string name="day_tab">दिन %1$d</string>
     <string name="tips_title">सुझाव</string>
-    <string name="show_json">JSON दिखाएँ</string>
-    <string name="hide_json">JSON छिपाएँ</string>
     <string name="action_new_plan">नई योजना</string>
+    <string name="action_share">शेयर करें</string>
 
     <string name="error_title">योजना नहीं बन सकी</string>
     <string name="error_api_key">इस ऐप के लिए AI सेवा अभी सेट नहीं है। बाद में फिर कोशिश करें।</string>

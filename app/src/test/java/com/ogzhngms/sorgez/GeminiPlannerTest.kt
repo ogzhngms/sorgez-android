@@ -5,6 +5,7 @@ import com.google.firebase.ai.type.Content
 import com.google.firebase.ai.type.FinishReason
 import com.google.firebase.ai.type.GenerateContentResponse
 import com.google.firebase.ai.type.InvalidAPIKeyException
+import com.google.firebase.ai.type.PermissionMissingException
 import com.google.firebase.ai.type.PromptBlockedException
 import com.google.firebase.ai.type.QuotaExceededException
 import com.google.firebase.ai.type.RequestTimeoutException
@@ -12,7 +13,11 @@ import com.google.firebase.ai.type.ResponseStoppedException
 import com.google.firebase.ai.type.ServerException
 import com.google.firebase.ai.type.UnknownException
 import java.net.UnknownHostException
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.currentTime
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 import org.junit.Test
@@ -58,6 +63,27 @@ class GeminiPlannerTest {
         assertEquals(GEMINI_MODELS.take(5), asked)
     }
 
+    // A model that hangs does not hold the plan up: after the hedge delay the next one starts and the first answer wins.
+    @Test
+    fun aSlowModelGetsCompanyAndTheFirstAnswerWins() = runTest {
+        val planner = GeminiPlanner(hedgeAfterMillis = 40_000) { model, _ ->
+            asked += model
+            if (model == GEMINI_MODELS[0]) awaitCancellation()
+            delay(5_000)
+            "plan from $model"
+        }
+        assertEquals("plan from ${GEMINI_MODELS[1]}", planner.plan("Destination: Rome"))
+        assertEquals(GEMINI_MODELS.take(2), asked)
+        assertEquals(45_000L, currentTime)
+    }
+
+    // An older model this project may not use is skipped like a busy one.
+    @Test
+    fun aModelClosedToThisProjectIsSkipped() {
+        val closed = make<PermissionMissingException>("Permission denied for this model", null)
+        assertEquals("plan from ${GEMINI_MODELS[1]}", runBlocking { planner(GEMINI_MODELS[0] to closed).plan("Destination: Rome") })
+    }
+
     @Test
     fun noNetworkStopsAtOnce() {
         val offline = make<UnknownException>("Something unexpected happened.", UnknownHostException("firebasevertexai.googleapis.com"))
@@ -70,6 +96,14 @@ class GeminiPlannerTest {
         val busy = make<ServerException>("Unexpected Response: 503", null)
         assertEquals(R.string.error_busy, failure(planner(*GEMINI_MODELS.map { it to busy }.toTypedArray())))
         assertEquals(GEMINI_MODELS, asked)
+    }
+
+    // An unregistered debug build or a modified copy: no other model would accept it, so stop and say so.
+    @Test
+    fun rejectedAppCheckStopsAtOnce() {
+        val rejected = make<ServerException>("Firebase App Check token is invalid.", null)
+        assertEquals(R.string.error_api_key, failure(planner("gemini-3.8-flash" to rejected)))
+        assertEquals(1, asked.size)
     }
 
     @Test

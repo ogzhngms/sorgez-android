@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">开始</string>
-    <string name="home_tagline">用 AI 规划你的下一次旅行</string>
     <string name="cd_profile">个人资料</string>
     <string name="cd_back">返回</string>
     <string name="profile_title">个人资料</string>
@@ -16,23 +15,11 @@
     <string name="about_version">版本 %1$s</string>
     <string name="about_images">地球图像：NASA</string>
     <string name="about_source">GitHub 上的源代码</string>
+    <string name="about_privacy">隐私政策</string>
 
     <string name="step_counter">第 %1$d 步，共 %2$d 步</string>
     <string name="q_destination">你想去哪里？</string>
     <string name="hint_destination">城市或国家</string>
-    <string name="popular_title">热门</string>
-    <string name="about_cappadocia">热气球与仙女烟囱</string>
-    <string name="about_rome">历史与意面</string>
-    <string name="about_paris">艺术与咖啡馆</string>
-    <string name="about_tokyo">霓虹与街头美食</string>
-    <string name="about_barcelona">高迪与海滩</string>
-    <string name="about_dubai">沙漠与摩天大楼</string>
-    <string name="place_cappadocia">卡帕多奇亚</string>
-    <string name="place_rome">罗马</string>
-    <string name="place_paris">巴黎</string>
-    <string name="place_tokyo">东京</string>
-    <string name="place_barcelona">巴塞罗那</string>
-    <string name="place_dubai">迪拜</string>
     <string name="q_days">玩几天？</string>
     <plurals name="days">
         <item quantity="other">%d 天</item>
@@ -58,38 +45,39 @@
     <string name="interest_beach">海滩</string>
     <string name="interest_adventure">探险</string>
     <string name="hint_notes">还有其他要求吗？（可选）</string>
-    <string name="q_pace">你喜欢什么节奏？</string>
-    <string name="pace_relaxed">轻松</string>
-    <string name="pace_balanced">适中</string>
-    <string name="pace_packed">紧凑</string>
     <string name="action_back">上一步</string>
     <string name="action_next">下一步</string>
 
     <string name="confirm_title">准备好规划了吗？</string>
-    <string name="confirm_body">确认后，你的回答会变成发给 AI 的提示词，AI 会以 JSON 格式返回行程。</string>
     <string name="label_destination">目的地</string>
     <string name="label_days">时长</string>
+    <string name="when_title">你什么时候去？</string>
+    <string name="when_unknown">还没确定</string>
+    <string name="label_when">时间</string>
+    <string name="days_weekend">周末</string>
+    <string name="days_week">1 周</string>
+    <string name="days_two_weeks">2 周</string>
     <string name="label_companions">同行</string>
     <string name="label_budget">预算</string>
     <string name="label_interests">兴趣</string>
     <string name="label_notes">备注</string>
-    <string name="label_pace">节奏</string>
     <string name="interests_none">无偏好</string>
-    <string name="show_prompt">显示提示词</string>
-    <string name="hide_prompt">隐藏提示词</string>
     <string name="action_edit">修改</string>
     <string name="action_plan">好的，开始规划</string>
 
-    <string name="loading_title">正在生成你的行程…</string>
-    <string name="loading_body">AI 正在规划你的旅行，通常需要半分钟左右，模型繁忙时会更久。</string>
+    <string name="loading_title">正在准备你的行程</string>
+    <string name="loading_step_1">正在规划路线…</string>
+    <string name="loading_step_2">正在挑选景点…</string>
+    <string name="loading_step_3">正在安排每一天…</string>
+    <string name="loading_step_4">正在计算预算…</string>
     <string name="action_cancel">取消</string>
 
     <string name="budget_estimate">预计预算：%1$s</string>
     <string name="day_title">第 %1$d 天 · %2$s</string>
+    <string name="day_tab">第 %1$d 天</string>
     <string name="tips_title">小贴士</string>
-    <string name="show_json">显示 JSON</string>
-    <string name="hide_json">隐藏 JSON</string>
     <string name="action_new_plan">新行程</string>
+    <string name="action_share">分享</string>
 
     <string name="error_title">无法生成行程</string>
     <string name="error_api_key">此应用的 AI 服务尚未配置。请稍后再试。</string>

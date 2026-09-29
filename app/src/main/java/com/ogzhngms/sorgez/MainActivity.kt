@@ -14,13 +14,20 @@ import com.google.firebase.Firebase
 import com.google.firebase.appcheck.appCheck
 import com.ogzhngms.sorgez.ui.SorGezApp
 import com.ogzhngms.sorgez.ui.SorGezTheme
+import java.io.File
 
 class MainActivity : ComponentActivity() {
     private val viewModel: TripViewModel by viewModels {
         viewModelFactory {
             initializer {
-                val gemini = GeminiPlanner(firebaseGemini())
-                TripViewModel { answers -> gemini.plan(buildPrompt(answers, promptLanguage(), AppSettings.currency(application))) }
+                val gemini = GeminiPlanner(ask = firebaseGemini())
+                val cache = if (BuildConfig.DEBUG) PlanCache(File(application.cacheDir, "plans")) else null
+                TripViewModel { answers ->
+                    val language = promptLanguage()
+                    val currency = AppSettings.currency(application)
+                    val key = planKey(answers, language, currency)
+                    cache?.get(key) ?: gemini.plan(buildPrompt(answers, language, currency)).also { cache?.put(key, it) }
+                }
             }
         }
     }

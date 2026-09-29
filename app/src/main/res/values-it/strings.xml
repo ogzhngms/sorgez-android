@@ -1,6 +1,5 @@
 <resources>
     <string name="action_start">Inizia</string>
-    <string name="home_tagline">Pianifica il tuo prossimo viaggio con l\'IA</string>
     <string name="cd_profile">Profilo</string>
     <string name="cd_back">Indietro</string>
     <string name="profile_title">Profilo</string>
@@ -16,23 +15,11 @@
     <string name="about_version">Versione %1$s</string>
     <string name="about_images">Immagini della Terra: NASA</string>
     <string name="about_source">Codice sorgente su GitHub</string>
+    <string name="about_privacy">Informativa sulla privacy</string>
 
     <string name="step_counter">Passo %1$d di %2$d</string>
     <string name="q_destination">Dove vuoi andare?</string>
     <string name="hint_destination">Una città o un paese</string>
-    <string name="popular_title">Popolari</string>
-    <string name="about_cappadocia">Mongolfiere e camini delle fate</string>
-    <string name="about_rome">Storia e pasta</string>
-    <string name="about_paris">Arte e caffè</string>
-    <string name="about_tokyo">Neon e cibo di strada</string>
-    <string name="about_barcelona">Gaudí e spiagge</string>
-    <string name="about_dubai">Deserto e grattacieli</string>
-    <string name="place_cappadocia">Cappadocia</string>
-    <string name="place_rome">Roma</string>
-    <string name="place_paris">Parigi</string>
-    <string name="place_tokyo">Tokyo</string>
-    <string name="place_barcelona">Barcellona</string>
-    <string name="place_dubai">Dubai</string>
     <string name="q_days">Quanti giorni?</string>
     <plurals name="days">
         <item quantity="one">%d giorno</item>
@@ -60,38 +47,39 @@
     <string name="interest_beach">Spiagge</string>
     <string name="interest_adventure">Avventura</string>
     <string name="hint_notes">Altro? (facoltativo)</string>
-    <string name="q_pace">Che ritmo preferisci?</string>
-    <string name="pace_relaxed">Rilassato</string>
-    <string name="pace_balanced">Equilibrato</string>
-    <string name="pace_packed">Intenso</string>
     <string name="action_back">Indietro</string>
     <string name="action_next">Avanti</string>
 
     <string name="confirm_title">Pronto a pianificare?</string>
-    <string name="confirm_body">Quando confermi, le tue risposte diventano un prompt per l\'IA, che restituisce il piano in JSON.</string>
     <string name="label_destination">Destinazione</string>
     <string name="label_days">Durata</string>
+    <string name="when_title">Quando parti?</string>
+    <string name="when_unknown">Non ancora deciso</string>
+    <string name="label_when">Quando</string>
+    <string name="days_weekend">Weekend</string>
+    <string name="days_week">1 settimana</string>
+    <string name="days_two_weeks">2 settimane</string>
     <string name="label_companions">Con</string>
     <string name="label_budget">Budget</string>
     <string name="label_interests">Interessi</string>
     <string name="label_notes">Note</string>
-    <string name="label_pace">Ritmo</string>
     <string name="interests_none">Nessuna preferenza</string>
-    <string name="show_prompt">Mostra il prompt</string>
-    <string name="hide_prompt">Nascondi il prompt</string>
     <string name="action_edit">Modifica</string>
     <string name="action_plan">OK, pianifica</string>
 
-    <string name="loading_title">Sto scrivendo il tuo piano…</string>
-    <string name="loading_body">L\'IA sta pianificando il tuo viaggio. Di solito ci vuole mezzo minuto, di più quando i modelli sono occupati.</string>
+    <string name="loading_title">Stiamo preparando il tuo viaggio</string>
+    <string name="loading_step_1">Tracciamo il percorso…</string>
+    <string name="loading_step_2">Scegliamo i luoghi da vedere…</string>
+    <string name="loading_step_3">Organizziamo le giornate…</string>
+    <string name="loading_step_4">Calcoliamo il budget…</string>
     <string name="action_cancel">Annulla</string>
 
     <string name="budget_estimate">Budget stimato: %1$s</string>
     <string name="day_title">Giorno %1$d · %2$s</string>
+    <string name="day_tab">Giorno %1$d</string>
     <string name="tips_title">Consigli</string>
-    <string name="show_json">Mostra JSON</string>
-    <string name="hide_json">Nascondi JSON</string>
     <string name="action_new_plan">Nuovo piano</string>
+    <string name="action_share">Condividi</string>
 
     <string name="error_title">Impossibile creare il piano</string>
     <string name="error_api_key">Il servizio di IA non è ancora configurato per questa app. Riprova più tardi.</string>
