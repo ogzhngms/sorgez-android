@@ -50,7 +50,6 @@ class TripFlowTest {
         next()
         compose.onNodeWithText(text(R.string.interest_food)).performClick()
         next()
-        next()
 
         compose.onNodeWithText("Rome").assertIsDisplayed()
         compose.onNodeWithText(text(R.string.action_plan)).performClick()
