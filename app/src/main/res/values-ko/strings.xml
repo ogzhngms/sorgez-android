@@ -15,6 +15,7 @@
     <string name="about_version">버전 %1$s</string>
     <string name="about_images">지구 이미지: NASA</string>
     <string name="about_source">GitHub의 소스 코드</string>
+    <string name="about_privacy">개인정보처리방침</string>
 
     <string name="step_counter">%2$d단계 중 %1$d단계</string>
     <string name="q_destination">어디로 가고 싶나요?</string>

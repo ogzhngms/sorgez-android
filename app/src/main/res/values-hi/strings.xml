@@ -15,6 +15,7 @@
     <string name="about_version">संस्करण %1$s</string>
     <string name="about_images">पृथ्वी की तस्वीरें: NASA</string>
     <string name="about_source">GitHub पर सोर्स कोड</string>
+    <string name="about_privacy">गोपनीयता नीति</string>
 
     <string name="step_counter">चरण %1$d / %2$d</string>
     <string name="q_destination">आप कहाँ जाना चाहते हैं?</string>

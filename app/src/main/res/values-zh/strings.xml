@@ -15,6 +15,7 @@
     <string name="about_version">版本 %1$s</string>
     <string name="about_images">地球图像：NASA</string>
     <string name="about_source">GitHub 上的源代码</string>
+    <string name="about_privacy">隐私政策</string>
 
     <string name="step_counter">第 %1$d 步，共 %2$d 步</string>
     <string name="q_destination">你想去哪里？</string>

@@ -15,6 +15,7 @@
     <string name="about_version">Versiya %1$s</string>
     <string name="about_images">Yer şəkilləri: NASA</string>
     <string name="about_source">GitHub-da mənbə kodu</string>
+    <string name="about_privacy">Məxfilik siyasəti</string>
 
     <string name="step_counter">Addım %1$d / %2$d</string>
     <string name="q_destination">Hara getmək istəyirsən?</string>

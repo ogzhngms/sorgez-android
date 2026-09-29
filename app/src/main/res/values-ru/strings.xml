@@ -15,6 +15,7 @@
     <string name="about_version">Версия %1$s</string>
     <string name="about_images">Снимки Земли: NASA</string>
     <string name="about_source">Исходный код на GitHub</string>
+    <string name="about_privacy">Политика конфиденциальности</string>
 
     <string name="step_counter">Шаг %1$d из %2$d</string>
     <string name="q_destination">Куда ты хочешь поехать?</string>

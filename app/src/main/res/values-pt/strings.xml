@@ -15,6 +15,7 @@
     <string name="about_version">Versão %1$s</string>
     <string name="about_images">Imagens da Terra: NASA</string>
     <string name="about_source">Código-fonte no GitHub</string>
+    <string name="about_privacy">Política de privacidade</string>
 
     <string name="step_counter">Passo %1$d de %2$d</string>
     <string name="q_destination">Para onde você quer ir?</string>
