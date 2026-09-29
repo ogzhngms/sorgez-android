@@ -74,6 +74,7 @@
 
     <string name="budget_estimate">Tahmini bütçe: %1$s</string>
     <string name="day_title">%1$d. gün · %2$s</string>
+    <string name="day_tab">%1$d. Gün</string>
     <string name="tips_title">İpuçları</string>
     <string name="show_json">JSON\'u göster</string>
     <string name="hide_json">JSON\'u gizle</string>

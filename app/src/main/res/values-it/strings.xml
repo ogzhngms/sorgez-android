@@ -75,6 +75,7 @@
 
     <string name="budget_estimate">Budget stimato: %1$s</string>
     <string name="day_title">Giorno %1$d · %2$s</string>
+    <string name="day_tab">Giorno %1$d</string>
     <string name="tips_title">Consigli</string>
     <string name="show_json">Mostra JSON</string>
     <string name="hide_json">Nascondi JSON</string>

@@ -73,6 +73,7 @@
 
     <string name="budget_estimate">予算の目安：%1$s</string>
     <string name="day_title">%1$d日目 · %2$s</string>
+    <string name="day_tab">%1$d日目</string>
     <string name="tips_title">ヒント</string>
     <string name="show_json">JSON を表示</string>
     <string name="hide_json">JSON を隠す</string>

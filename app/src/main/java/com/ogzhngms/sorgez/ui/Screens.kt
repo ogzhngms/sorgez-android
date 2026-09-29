@@ -29,6 +29,7 @@ import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -45,7 +46,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -59,7 +63,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -555,20 +561,19 @@ private fun LoadingScreen(destination: String, onCancel: () -> Unit) {
 
 private val LOADING_STEPS = listOf(R.string.loading_step_1, R.string.loading_step_2, R.string.loading_step_3, R.string.loading_step_4)
 
+// The plan as pages: a header with the title and budget, a tab per day plus one for tips, swiped sideways,
+// and Share and New plan always in reach at the bottom.
 @Composable
 private fun ResultScreen(result: Screen.Result, onNewPlan: () -> Unit) {
     val itinerary = result.itinerary
     val context = LocalContext.current
-    var showJson by rememberSaveable { mutableStateOf(false) }
-    LazyColumn(
-        Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        item {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(itinerary.title, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
-                Text(itinerary.summary, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    val pager = rememberPagerState { itinerary.days.size + 1 }
+    val scope = rememberCoroutineScope()
+    Column(Modifier.fillMaxSize()) {
+        Column(Modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(itinerary.title, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Icon(painterResource(R.drawable.ic_money_mid), contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
                 Text(
                     stringResource(R.string.budget_estimate, itinerary.estimatedBudget),
                     style = MaterialTheme.typography.labelLarge,
@@ -576,32 +581,98 @@ private fun ResultScreen(result: Screen.Result, onNewPlan: () -> Unit) {
                 )
             }
         }
-        items(itinerary.days) { day -> DayCard(day) }
+        PrimaryScrollableTabRow(selectedTabIndex = pager.currentPage, edgePadding = 24.dp, containerColor = Color.Transparent) {
+            itinerary.days.forEachIndexed { index, day ->
+                Tab(
+                    selected = pager.currentPage == index,
+                    onClick = { scope.launch { pager.animateScrollToPage(index) } },
+                    text = { Text(stringResource(R.string.day_tab, day.day)) },
+                )
+            }
+            Tab(
+                selected = pager.currentPage == itinerary.days.size,
+                onClick = { scope.launch { pager.animateScrollToPage(itinerary.days.size) } },
+                text = { Text(stringResource(R.string.tips_title)) },
+            )
+        }
+        HorizontalPager(pager, Modifier.weight(1f)) { page ->
+            if (page < itinerary.days.size) DayPage(itinerary.days[page]) else TipsPage(itinerary.tips, result.json)
+        }
+        Row(Modifier.padding(horizontal = 24.dp, vertical = 12.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            OutlinedButton(onClick = { share(context, itinerary) }, modifier = Modifier.weight(1f)) {
+                Icon(painterResource(R.drawable.ic_share), contentDescription = null, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(8.dp))
+                Text(stringResource(R.string.action_share))
+            }
+            Button(onClick = onNewPlan, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.action_new_plan)) }
+        }
+    }
+}
+
+// One day as a timeline: a sun or moon by the time of day, joined by a line, with the activity beside it.
+@Composable
+private fun DayPage(day: Day) {
+    LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(24.dp)) {
         item {
+            Text(day.title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(20.dp))
+        }
+        itemsIndexed(day.activities) { index, activity ->
+            Row(Modifier.height(IntrinsicSize.Min)) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Surface(shape = CircleShape, color = MaterialTheme.colorScheme.primary.copy(alpha = 0.14f), modifier = Modifier.size(36.dp)) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                painterResource(if (isEvening(activity.time)) R.drawable.ic_moon else R.drawable.ic_sun),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(18.dp),
+                            )
+                        }
+                    }
+                    if (index < day.activities.lastIndex) {
+                        Box(Modifier.width(2.dp).fillMaxHeight().background(MaterialTheme.colorScheme.outlineVariant))
+                    }
+                }
+                Spacer(Modifier.width(16.dp))
+                Column(Modifier.weight(1f).padding(bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(activity.time, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
+                    Text(activity.title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                    Text(activity.description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Surface(shape = MaterialTheme.shapes.small, color = MaterialTheme.colorScheme.surfaceVariant) {
+                        Text(
+                            activity.cost,
+                            style = MaterialTheme.typography.labelMedium,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+// From five in the afternoon, and before five in the morning, an activity gets the moon.
+private fun isEvening(time: String): Boolean = time.substringBefore(':').toIntOrNull()?.let { it >= 17 || it < 5 } == true
+
+@Composable
+private fun TipsPage(tips: List<String>, json: String) {
+    var showJson by rememberSaveable { mutableStateOf(false) }
+    LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        items(tips) { tip ->
             Card(Modifier.fillMaxWidth()) {
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(stringResource(R.string.tips_title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    itinerary.tips.forEach { Text("• $it", color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                Row(Modifier.padding(16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Icon(painterResource(R.drawable.ic_tip), contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                    Text(tip, style = MaterialTheme.typography.bodyMedium)
                 }
             }
         }
+        // The raw JSON is a tool for the developer, so only debug builds offer it.
         if (BuildConfig.DEBUG) item {
-            Column {
-                TextButton(onClick = { showJson = !showJson }) {
-                    Text(stringResource(if (showJson) R.string.hide_json else R.string.show_json))
-                }
-                if (showJson) Code(remember(result.json) { JSONObject(result.json).toString(2) })
+            TextButton(onClick = { showJson = !showJson }) {
+                Text(stringResource(if (showJson) R.string.hide_json else R.string.show_json))
             }
-        }
-        item {
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                OutlinedButton(onClick = { share(context, itinerary) }, modifier = Modifier.weight(1f)) {
-                    Icon(painterResource(R.drawable.ic_share), contentDescription = null, modifier = Modifier.size(18.dp))
-                    Spacer(Modifier.width(8.dp))
-                    Text(stringResource(R.string.action_share))
-                }
-                Button(onClick = onNewPlan, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.action_new_plan)) }
-            }
+            if (showJson) Code(remember(json) { JSONObject(json).toString(2) })
         }
     }
 }
@@ -625,35 +696,6 @@ private fun share(context: Context, itinerary: Itinerary) {
     }.trim()
     val send = Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_SUBJECT, itinerary.title).putExtra(Intent.EXTRA_TEXT, text)
     context.startActivity(Intent.createChooser(send, context.getString(R.string.action_share)))
-}
-
-@Composable
-private fun DayCard(day: Day) {
-    Card(Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Text(
-                stringResource(R.string.day_title, day.day, day.title),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-            )
-            day.activities.forEach { activity ->
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text(
-                        activity.time,
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.width(48.dp),
-                    )
-                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        Text(activity.title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
-                        Text(activity.description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Text(activity.cost, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.tertiary)
-                    }
-                }
-            }
-        }
-    }
 }
 
 @Composable

@@ -74,6 +74,7 @@
 
     <string name="budget_estimate">अनुमानित बजट: %1$s</string>
     <string name="day_title">दिन %1$d · %2$s</string>
+    <string name="day_tab">दिन %1$d</string>
     <string name="tips_title">सुझाव</string>
     <string name="show_json">JSON दिखाएँ</string>
     <string name="hide_json">JSON छिपाएँ</string>
